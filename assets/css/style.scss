@@ -1,4 +1,5 @@
  ---
  ---
 
-@import "valhalla";
+@import "{{ site.theme }}";
+@import url('/valhallaAPI/assets/css/valhalla.css');
