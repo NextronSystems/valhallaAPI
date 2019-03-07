@@ -1,3 +1,7 @@
 a {
   color: #3dbedc;
 }
+
+body {
+  font: 14px/1.5 "Roboto Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+}
