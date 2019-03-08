@@ -1,14 +1,38 @@
 # valhallaAPI
-Valhalla API Client
 
 This module allows you to interact with the Valhalla API, retrieve rules in different formats, filter them and write them to disk.
 
-The module provides functions to filter the retrieved YARA rules by 
+The module has 3 major functions:
+
+- `get_rules_text()` retrieves rules as text
+- `get_rules_json()` retrieves rules as JSON
+- `get_rule_info()` queries that DB for info on a certain rule (e.g. hashes of samples, AV detection ratio)
+
+The module provides functions to filter the retrieved YARA rules based on 
 - tags
 - score
-- required YARA version and required YARA modules
-- search queries
-- date
+- keywords
+- supported YARA version and required YARA modules
+
+It also allows you to retrieve a filtered rule set that fits the product that you use to apply the rules. For example, you can get a filtered rule set with rules that will run on your `FireEyeEX` appliance by filtering all rules that use feature only available in YARA versions higher than the supported `1.7.0`. 
+
+## Scores
+
+The following list explains the scores used in the rule set
+
+|Score|Type|Description|
+|-----|----|-----------|
+|1-39|Info|Low scoring rules used in our scanners (excluded from Valhalla, only used in our scanners)|
+|40-59|Noteworthy|Anomaly and threat hunting rules|
+|60-74|Suspicious|Rules for suspicious objects|
+|75-100|Alert|Hard malicious matches|
+
+
+## Getting Started
+
+```bash
+pip install valhallaAPI
+```
 
 ## Usage
 
@@ -51,6 +75,18 @@ response = v.get_rules_text(max_version="3.2.0", modules=['pe'])
 Get all subscribed rules for your `FireEyeNX` and save them to a file
 ```python
 response = v.get_rules_text(product="FireEyeEX")
+response = v.get_rules_text(product=v.FIREEYENX)
+```
+
+The following products have predefined presets
+```python
+    FIREEYEAX = "FireEyeAX"
+    FIREEYENX = "FireEyeNX"
+    FIREEYEEX = "FireEyeEX"
+    CARBONBLACK = "CarbonBlack"
+    TANIUM = "Tanium"
+    TENABLE = "Tenable"
+    SYMANTECMAA = "SymantecMAA"
 ```
 
 An example response will look like
@@ -109,7 +145,7 @@ An example response will look like
   "rules": [
     {
       "author": "Florian Roth", 
-      "content": "rule EXP_Libre_Office_CVE_2018_16858_RIDBA9 : EXPLOIT OFFICE DEMO FILE {\n   meta:\n      description = \"Detects exploits addressing CVE-2018-16858 in LibreOffice - modified version\"\n      author = \"Florian Roth\"\n      reference = \"https://insert-script.blogspot.com/2019/02/libreoffice-cve-2018-16858-remote-code.html\"\n      date = \"2019-02-05 14:17:21\"\n      score = 70\n      customer = \"demo\"\n      copyright = \"Distribution to third parties is not permitted and will be pursued with legal measurements\" \n      minimum_yara = \"1.7\"\n      \n   strings:\n      $x1 = \"&#x74;&#x65;&#x6d;&#x70;&#x66;&#x69;&#x6c;&#x65;&#x70;&#x61;&#x67;&#x65;&#x72\" \n      $x2 = \"&#116;&#101;&#109;&#112;&#102;&#105;&#108;&#101;&#112;&#97;&#103;&#101;&#114;\" \n      $s1 = \"xlink:href=\\\"vnd.sun.star.script:\" ascii nocase\n      $s2 = \".py$tempfilepager\" ascii nocase\n      $s3 = \"language=Python\" ascii nocase\n   condition: \n      uint32be ( 0 ) == 0x3c3f786d and all of them or 1 of ( $x* )\n}", 
+      "content": "rule EXP_Libre_Office_CVE_2018_16858_RIDBA9 : EXPLOIT OFFICE DEMO FILE APT {\n   meta:\n      description = \"Detects exploits addressing CVE-2018-16858 in LibreOffice - modified version\"\n      author = \"Florian Roth\"\n      reference = \"https://insert-script.blogspot.com/2019/02/libreoffice-cve-2018-16858-remote-code.html\"\n      date = \"2019-02-05 14:17:21\"\n      score = 70\n      customer = \"demo\"\n      copyright = \"Distribution to third parties is not permitted and will be pursued with legal measurements\" \n      minimum_yara = \"1.7\"\n      \n   strings:\n      $x1 = \"&#x74;&#x65;&#x6d;&#x70;&#x66;&#x69;&#x6c;&#x65;&#x70;&#x61;&#x67;&#x65;&#x72\" \n      $x2 = \"&#116;&#101;&#109;&#112;&#102;&#105;&#108;&#101;&#112;&#97;&#103;&#101;&#114;\" \n      $s1 = \"xlink:href=\\\"vnd.sun.star.script:\" ascii nocase\n      $s2 = \".py$tempfilepager\" ascii nocase\n      $s3 = \"language=Python\" ascii nocase\n   condition: \n      uint32be ( 0 ) == 0x3c3f786d and all of them or 1 of ( $x* )\n}", 
       "date": "2019-02-05 12:54:31", 
       "description": "Detects exploits addressing CVE-2018-16858 in LibreOffice - modified version", 
       "minimum_yara": "1.7", 
@@ -121,7 +157,8 @@ An example response will look like
         "EXPLOIT", 
         "OFFICE", 
         "DEMO", 
-        "FILE"
+        "FILE",
+        "APT"
       ]
     }, 
   ...
@@ -179,17 +216,6 @@ An example output of a rule info request will look like
   ] 
 }
 ```
-
-## Scores
-
-The following list explains the scores used in the rule sets. 
-
-|Score|Type|Description|
-|-----|----|-----------|
-|1-39|Info|Low scoring rules used in our scanners (excluded from Valhalla)|
-|40-59|Noteworthy|Anomaly and threat hunting rules|
-|60-74|Suspicious|Rules for suspicious objects|
-|75-100|Alert|Hard malicious matches|
 
 ## Important Notices
 
