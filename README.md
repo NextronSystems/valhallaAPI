@@ -27,6 +27,22 @@ The following list explains the scores used in the rule set
 |60-74|Suspicious|Rules for suspicious objects|
 |75-100|Alert|Hard malicious matches|
 
+## Demo Access
+
+There is a demo API key that can be used for testing purposes. 
+
+```
+1111111111111111111111111111111111111111111111111111111111111111
+```
+
+It will allow you to retrieve the processed public [signature-base](https://github.com/Neo23x0/signature-base) rule set. 
+
+The key will also allow you to query the rule info for a single rule, which is:
+```
+Casing_Anomaly_ByPass
+```
+
+Please note that Valhalla has protection mechanisms in place that will block your end of the Bifrost for a significant amount of time if you try stupid things.  
 
 ## Getting Started
 
