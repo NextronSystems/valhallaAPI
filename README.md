@@ -182,15 +182,12 @@ An example response will look like
 
 ### Rule Info
 
-Get all subscribed rules with the `APT` tag as `JSON` and save them to a file
+Get the information for rule `Casing_Anomaly_ByPass`
 ```python
 from valhallaAPI.valhalla import ValhallaAPI
 
 v = ValhallaAPI(api_key="Your API Key")
 response = v.get_rule_info(rulename="Casing_Anomaly_ByPass")
-
-with open('valhalla-rules.json') as fh:
-    fh.write(response)
 ```
 
 An example output of a rule info request will look like
@@ -235,6 +232,5 @@ An example output of a rule info request will look like
 
 ## Important Notices
 
-- Old rules are constantly improved and may have changed the next time you fetch the rule set.
-- The rule date is the creation time of the rule, not the timestamp when it was inserted into the database. It takes 1-3 days until a rule gets inserted into the database after the QA. Running a scheduled job once a week that does only extract the the rules created in the last 7 days, will therefore inevitably miss new rules. 
+- We constantly improve old rules. They may have changed the next time you fetch the rule set. Therefore it is recommended to always fetch a full set and replace older rules with their newer versions. 
 - The full rule set contains YARA rules with scores lower than 60, which are meant for threat hunting and anomaly detection use cases. 
