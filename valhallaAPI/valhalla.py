@@ -142,7 +142,7 @@ class ValhallaAPI(object):
         if search:
             rules_response['rules'] = filter_search(rules_response['rules'], query=search)
         # Custom filtering
-        if max_version or len(modules) > 0:
+        if max_version or len(modules) > 0 or with_crypto is not True:
             rules_response['rules'] = filter_requirements(rules_response['rules'],
                                                           sup_ver_string=max_version,
                                                           sup_modules=modules,
