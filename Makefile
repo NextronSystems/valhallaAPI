@@ -1,4 +1,4 @@
-.PHONY: help prepare-dev test lint
+.PHONY: help prepare-dev test lint release
 
 VENV_NAME?=venv
 VENV_ACTIVATE=. $(VENV_NAME)/bin/activate
@@ -13,7 +13,7 @@ help:
 	@echo "       run pylint and mypy"
 
 prepare-dev:
-	sudo apt-get -y install python3.5 python3-pip
+	sudo apt-get -y install python3 python3-pip
 	python3 -m pip install virtualenv
 	make venv
 
@@ -27,6 +27,12 @@ $(VENV_NAME)/bin/activate: setup.py
 
 test: venv
 	${PYTHON} -m pytest -v
+
+release:
+	${PYTHON} -m pip install --upgrade setuptools wheel
+	${PYTHON} -m pip install --upgrade twine
+	${PYTHON} -m twine check dist/*
+	${PYTHON} -m twine upload dist/*
 
 lint: venv
 	${PYTHON} -m pylint
