@@ -11,7 +11,6 @@ __version__ = "0.1.2"
 
 import json
 import requests
-import logging
 from urllib.parse import urlparse
 from .filters import *
 from .helper import generate_header
@@ -43,14 +42,6 @@ class ValhallaAPI(object):
         Initializes the API client object
         :param api_key:
         """
-        # Logging
-        logFormatter = logging.Formatter("[%(levelname)-5.5s] %(message)s")
-        self.Log = logging.getLogger()
-        self.Log.setLevel(logging.INFO)
-        # Console Handler
-        consoleHandler = logging.StreamHandler()
-        consoleHandler.setFormatter(logFormatter)
-        self.Log.addHandler(consoleHandler)
 
         # API Key
         self.api_key = api_key
@@ -64,8 +55,6 @@ class ValhallaAPI(object):
         :return:
         """
         u = urlparse(proxy)
-        if u.scheme == 'http':
-            self.Log.warning("You've set an HTTP proxy URL, but should use HTTPS instead")
         # Auth
         auth_string = ""
         if user:
