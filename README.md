@@ -4,6 +4,10 @@ This module allows you to interact with the Valhalla API, retrieve rules in diff
 
 It contains a Python module `valhallaAPI` and a Python command line API client `valhalla-cli`. 
 
+# Python Module
+
+The web API allows you to retrieve the subscribed rules. 
+
 The 3 main functions of the Python module are:
 
 - `get_rules_text()` retrieves rules as text
@@ -17,26 +21,6 @@ The module provides functions to filter the retrieved YARA rules based on
 - supported YARA version and required YARA modules
 
 It also allows you to retrieve a filtered rule set that fits the product that you use to apply the rules. For example, you can get a filtered rule set with rules that will run on your `FireEyeEX` appliance by filtering all rules that use feature only available in YARA versions higher than the supported `1.7.0`. 
-
-## Scores
-
-The following list explains the scores used in the rule set
-
-|Score|Type|Description|
-|-----|----|-----------|
-|1-39|Info|Low scoring rules used in our scanners (excluded from Valhalla, only used in our scanners)|
-|40-59|Noteworthy|Anomaly and threat hunting rules|
-|60-74|Suspicious|Rules for suspicious objects|
-|75-100|Alert|Hard malicious matches|
-
-## Important Notices
-
-- We constantly improve old rules. They may have changed the next time you fetch the rule set. Therefore it is recommended to always fetch a full set and replace older rules with their newer versions. 
-- The full rule set contains YARA rules with scores lower than 60, which are meant for threat hunting and anomaly detection use cases. 
-
-# Python Module
-
-The web API allows you to retrieve the subscribed rules. The Python module
 
 ## Demo Access
 
@@ -337,3 +321,19 @@ Get rules that contain the keyword `Mimikatz` and save them to `mimikatz-rules.y
 ```bash
 valhalla-cli -k YOUR-API-KEY -fq Mimikatz -o mimikatz-rules.yar
 ```
+
+# Scores
+
+The following list explains the scores used in the rule set
+
+|Score|Type|Description|
+|-----|----|-----------|
+|1-39|Info|Low scoring rules used in our scanners (excluded from Valhalla, only used in our scanners)|
+|40-59|Noteworthy|Anomaly and threat hunting rules|
+|60-74|Suspicious|Rules for suspicious objects|
+|75-100|Alert|Hard malicious matches|
+
+# Important Notices
+
+- We constantly improve old rules. They may have changed the next time you fetch the rule set. Therefore it is recommended to always fetch a full set and replace older rules with their newer versions. 
+- The full rule set contains YARA rules with scores lower than 60, which are meant for threat hunting and anomaly detection use cases. 
