@@ -20,12 +20,25 @@ def test_quote():
 
 def test_status():
     """
-    Retrieves the demo rules from the rule feed
+    Retrieves the API status
     :return:
     """
     v = ValhallaAPI(api_key=DEMO_KEY)
     status = v.get_status()
     assert status["status"] == "green"
+
+
+def test_subscription():
+    """
+    Retrieves the subscription status of the current user
+    :return:
+    """
+    v = ValhallaAPI(api_key=DEMO_KEY)
+    response = v.get_subscription()
+    print(response)
+    assert len(response) == 5
+    assert response["subscription"] == "limited"
+    assert response["tags"] == ['DEMO']
 
 
 def test_demo_rules_json():
