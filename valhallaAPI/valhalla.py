@@ -97,6 +97,7 @@ class ValhallaAPI(object):
                           proxies=self.proxies)
         return json.loads(r.text)
 
+    def get_subscription(self):
     def get_rule_info(self, rulename):
         """
         Retrieve info for a given rule
