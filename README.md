@@ -34,9 +34,9 @@ The following list explains the scores used in the rule set
 - We constantly improve old rules. They may have changed the next time you fetch the rule set. Therefore it is recommended to always fetch a full set and replace older rules with their newer versions. 
 - The full rule set contains YARA rules with scores lower than 60, which are meant for threat hunting and anomaly detection use cases. 
 
-# Web API
+# Python Module
 
-The web API allows you to retrieve the subscribed rules  
+The web API allows you to retrieve the subscribed rules. The Python module
 
 ## Demo Access
 
@@ -58,7 +58,7 @@ Please note that Valhalla has protection mechanisms in place that will block you
 ## Getting Started
 
 ```bash
-pip install valhallaAPI
+pip3 install valhallaAPI
 ```
 
 ## Usage
@@ -253,6 +253,15 @@ An example output of a rule info request will look like
 # API Client
 
 The API client allows you to query the Web API from command line. It requires Python3.  
+
+## Getting Started
+
+Install Python3 and then run the following command:
+
+```bash
+pip3 install valhallaAPI
+```
+You should then be able to run `valhalla-cli` from command line.
 
 ## Usage
 
