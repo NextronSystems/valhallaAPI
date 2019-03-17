@@ -22,4 +22,8 @@ setuptools.setup(
         'packaging',
         'requests',
     ],
+    python_requires='~=3.5',
+    scripts=[
+        'valhalla-cli',
+    ]
 )
