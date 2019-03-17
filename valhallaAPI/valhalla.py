@@ -98,6 +98,17 @@ class ValhallaAPI(object):
         return json.loads(r.text)
 
     def get_subscription(self):
+        """
+        Retrieve the subscribed tags
+        :return:
+        """
+        r = requests.post("%s/api/%s/subscription" % (self.base_url, self.api_version),
+                          data={
+                              "apikey": self.api_key,
+                          },
+                          proxies=self.proxies)
+        return json.loads(r.text)
+
     def get_rule_info(self, rulename):
         """
         Retrieve info for a given rule
