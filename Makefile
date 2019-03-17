@@ -1,4 +1,4 @@
-.PHONY: help prepare-dev test lint release
+.PHONY: help prepare-dev test lint release release-test
 
 VENV_NAME?=venv
 VENV_ACTIVATE=. $(VENV_NAME)/bin/activate
@@ -29,10 +29,20 @@ test: venv
 	${PYTHON} -m pytest -v
 
 release:
+	rm -rf ./dist/*
 	${PYTHON} -m pip install --upgrade setuptools wheel
 	${PYTHON} -m pip install --upgrade twine
+	${PYTHON} setup.py sdist bdist_wheel
 	${PYTHON} -m twine check dist/*
 	${PYTHON} -m twine upload dist/*
+
+release-test:
+	rm -rf ./dist/*
+	${PYTHON} -m pip install --upgrade setuptools wheel
+	${PYTHON} -m pip install --upgrade twine
+	${PYTHON} setup.py sdist bdist_wheel
+	${PYTHON} -m twine check dist/*
+	${PYTHON} -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 lint: venv
 	${PYTHON} -m pylint
