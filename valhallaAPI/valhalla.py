@@ -37,6 +37,9 @@ class ValhallaAPI(object):
     TENABLE = "Tenable"
     SYMANTECMAA = "SymantecMAA"
 
+    # Cached info
+    last_retrieved_rules_count = 0
+
     def __init__(self, api_key):
         """
         Initializes the API client object
@@ -172,6 +175,9 @@ class ValhallaAPI(object):
         response_elements = list()
         # Generate header
         response_elements.append(generate_header(rules_response))
+
+        # Save the number of retrieved rules
+        self.last_retrieved_rules_count = len(rules_response['rules'])
 
         # Rules
         for rule in rules_response['rules']:
