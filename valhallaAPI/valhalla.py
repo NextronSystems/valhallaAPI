@@ -85,7 +85,7 @@ class ValhallaAPI(object):
         r = requests.get("%s/quote" % self.base_url, verify=self.verify_ssl)
         return r.text
 
-    def get_status(self, score=0, tag="%", last=93):
+    def get_status(self):
         """
         Retrieve the service status
         :return:
