@@ -37,6 +37,10 @@ class ValhallaAPI(object):
     TENABLE = "Tenable"
     SYMANTECMAA = "SymantecMAA"
 
+    PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA']
+
+    DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
+
     # Cached info
     last_retrieved_rules_count = 0
 
