@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+# Valhalla API command line client
+# Florian Roth, 2019
+
+__version__ = "0.0.2"
+
+import sys
+import argparse
+import logging
+import platform
+from valhallaAPI.valhalla import ValhallaAPI
+
+
+if __name__ == '__main__':
+    # Parse Arguments
+    parser = argparse.ArgumentParser(description='Valhalla-CLI')
+    parser.add_argument('-k', help='API KEY', metavar='apikey', default=ValhallaAPI.DEMO_KEY)
+    parser.add_argument('-o', help='output file', metavar='output-file', default='valhalla-rules.yar')
+    parser.add_argument('--check', action='store_true', default=False,
+                        help='Check subscription info and total rule count')
+    parser.add_argument('--debug', action='store_true', default=False, help='Debug output')
+
+    group_proxy = parser.add_argument_group(
+        '=======================================================================\nProxy')
+    group_proxy.add_argument('-p', help='proxy URL (e.g. https://my.proxy.net:8080)', metavar='proxy-url', default='')
+    group_proxy.add_argument('-pu', help='proxy user', metavar='proxy-user', default='')
+    group_proxy.add_argument('-pp', help='proxy password', metavar='proxy-pass', default='')
+
+    group_filter = parser.add_argument_group(
+        '=======================================================================\nFilter')
+    group_filter.add_argument('-fp', help='filter product (valid products are: %s)' %
+                                          ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER),
+                              metavar='product', default='')
+    group_filter.add_argument('-fv', help='get rules that support the given YARA version and lower',
+                              metavar='yara-version', default='')
+    group_filter.add_argument('-fm', help='set a list of modules that your product supports (e.g. "-fm pe hash") '
+                                          '(setting no modules means taht all modules are supported by your product)',
+                              action='append', nargs='+', metavar='modules')
+    group_filter.add_argument('-ft', help='set a list of tags to receive (e.g. "-ft APT MAL")',
+                              action='append', nargs='+', metavar='tags')
+    group_filter.add_argument('-fs', help='minimum score of rules to retrieve (e.g. "-fs 75")',
+                              metavar='score', default=0)
+    group_filter.add_argument('-fq', help='get only rules that match a certain keyword in name or description '
+                                          '(e.g. "-fq Mimikatz")', metavar='query', default='')
+    group_filter.add_argument('--nocrypto', help='filter all rules that require YARA to be compiled with crypto '
+                                                 'support (OpenSSL)', action='store_false', default=True)
+
+    args = parser.parse_args()
+
+    print(" ")
+    print("===========================================================")
+    print("   _   __     ____        ____         _______   ____ ")
+    print("  | | / /__ _/ / /  ___ _/ / /__ _____/ ___/ /  /  _/ ")
+    print("  | |/ / _ `/ / _ \\/ _ `/ / / _ `/___/ /__/ /___/ /   ")
+    print("  |___/\\_,_/_/_//_/\\_,_/_/_/\\_,_/    \\___/____/___/   ")
+    print("   Ver. %s, Florian Roth, 2019                        " % __version__)
+    print(" ")
+    print("===========================================================")
+    print(" ")
+
+    # Logging
+    logFormatter = logging.Formatter("[%(levelname)-5.5s] %(message)s")
+    logFormatterRemote = logging.Formatter("{0} [%(levelname)-5.5s] %(message)s".format(platform.uname()[1]))
+    Log = logging.getLogger(__name__)
+    Log.setLevel(logging.INFO)
+    # Console Handler
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setFormatter(logFormatter)
+    Log.addHandler(consoleHandler)
+
+    # What will be done
+    if args.k == ValhallaAPI.DEMO_KEY:
+        Log.warning("You are using the DEMO API key and will only retrieve the reduced open source signature set")
+        Log.warning("Set your private API key with '-k APIKEY' to get the rule sets that your have subscribed")
+
+    # Create the ValhallaAPI object
+    v = ValhallaAPI(api_key=args.k)
+
+    # Subscription check
+    if args.check:
+        status = v.get_subscription()
+        if status['active']:
+            Log.info("Account is active: %s" % status)
+            sys.exit(0)
+        else:
+            Log.error("Account is inactive: %s" % status)
+            sys.exit(1)
+
+    # Proxy
+    if args.p:
+        Log.info("Setting proxy URL: %s USER: %s PASS: (hidden)" % (args.p, args.pu, args.pp))
+        if args.p.startswith("http:"):
+            Log.warning("URL starts with http instead of https - you should use a TLS encrypted connection")
+        v.set_proxy(args.p, args.pu, args.pp)
+
+    # Default: Get all rules that the set API key is subscribed to
+    # prepare some variables
+    modules = []
+    if args.fm:
+        modules = args.fm[0]
+    tags = []
+    if args.ft:
+        tags = args.ft[0]
+
+    # Info output
+    Log.info("Retrieving rules with params PRODUCT: %s MAX_VERSION: %s MODULES: %s WITH_CRYPTO: %s TAGS: %s "
+             "SCORE: %s QUERY: %s" % (
+                 args.fp,
+                 args.fv,
+                 ", ".join(modules),
+                 str(args.nocrypto),
+                 ", ".join(tags),
+                 str(args.fs),
+                 args.fq
+             ))
+
+    # Retrieve rules
+    response = v.get_rules_text(
+        product=args.fp,
+        max_version=args.fv,
+        modules=modules,
+        with_crypto=args.nocrypto,
+        tags=tags,
+        score=int(args.fs),
+        search=args.fq,
+    )
+
+    # Response information
+    Log.info("Number of retrieved rules: %d" % v.last_retrieved_rules_count)
+
+    # Output
+    Log.info("Writing retrieved rules into: %s" % args.o)
+    with open(args.o, 'w') as fh:
+        fh.write(response)

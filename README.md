@@ -2,7 +2,9 @@
 
 This module allows you to interact with the Valhalla API, retrieve rules in different formats, filter them and write them to disk.
 
-The module has 3 major functions:
+It contains a Python module `valhallaAPI` and a Python command line API client `valhalla-cli`. 
+
+The 3 main functions of the Python module are:
 
 - `get_rules_text()` retrieves rules as text
 - `get_rules_json()` retrieves rules as JSON
@@ -26,6 +28,15 @@ The following list explains the scores used in the rule set
 |40-59|Noteworthy|Anomaly and threat hunting rules|
 |60-74|Suspicious|Rules for suspicious objects|
 |75-100|Alert|Hard malicious matches|
+
+## Important Notices
+
+- We constantly improve old rules. They may have changed the next time you fetch the rule set. Therefore it is recommended to always fetch a full set and replace older rules with their newer versions. 
+- The full rule set contains YARA rules with scores lower than 60, which are meant for threat hunting and anomaly detection use cases. 
+
+# Web API
+
+The web API allows you to retrieve the subscribed rules  
 
 ## Demo Access
 
@@ -69,7 +80,7 @@ from valhallaAPI.valhalla import ValhallaAPI
 v = ValhallaAPI(api_key="Your API Key")
 response = v.get_rules_text()
 
-with open('valhalla-rules.yar') as fh:
+with open('valhalla-rules.yar', 'w') as fh:
     fh.write(response)
 ```
 
@@ -88,10 +99,19 @@ Get all subscribed rules for your scan engine, which suppports YARA up to versio
 response = v.get_rules_text(max_version="3.2.0", modules=['pe'])
 ```
 
-Get all subscribed rules for your `FireEyeNX` and save them to a file
+Get all subscribed rules for your `FireEyeNX`
 ```python
+
+from valhallaAPI.valhalla import ValhallaAPI
+
+v = ValhallaAPI(api_key="Your API Key")
 response = v.get_rules_text(product="FireEyeEX")
-response = v.get_rules_text(product=v.FIREEYENX)
+
+
+```
+Get all subscribed rules for your `Tanium`
+```python
+response = v.get_rules_text(product=v.TANIUM)
 ```
 
 The following products have predefined presets
@@ -230,7 +250,81 @@ An example output of a rule info request will look like
 }
 ```
 
-## Important Notices
+# API Client
 
-- We constantly improve old rules. They may have changed the next time you fetch the rule set. Therefore it is recommended to always fetch a full set and replace older rules with their newer versions. 
-- The full rule set contains YARA rules with scores lower than 60, which are meant for threat hunting and anomaly detection use cases. 
+The API client allows you to query the Web API from command line. It requires Python3.  
+
+## Usage
+
+```
+usage: valhalla-cli [-h] [-k apikey] [-o output-file] [--check] [--debug]
+                    [-p proxy-url] [-pu proxy-user] [-pp proxy-pass]
+                    [-fp product] [-fv yara-version]
+                    [-fm modules [modules ...]] [-ft tags [tags ...]]
+                    [-fs score] [-fq query] [--nocrypto]
+
+Valhalla-CLI
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -k apikey             API KEY
+  -o output-file        output file
+  --check               Check subscription info and total rule count
+  --debug               Debug output
+
+=======================================================================
+Proxy:
+  -p proxy-url          proxy URL (e.g. https://my.proxy.net:8080)
+  -pu proxy-user        proxy user
+  -pp proxy-pass        proxy password
+
+=======================================================================
+Filter:
+  -fp product           filter product (valid products are: FireEyeAX,
+                        FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable,
+                        SymantecMAA)
+  -fv yara-version      get rules that support the given YARA version and
+                        lower
+  -fm modules [modules ...]
+                        set a list of modules that your product supports (e.g.
+                        "-fm pe hash") (setting no modules means taht all
+                        modules are supported by your product)
+  -ft tags [tags ...]   set a list of tags to receive (e.g. "-ft APT MAL")
+  -fs score             minimum score of rules to retrieve (e.g. "-fs 75")
+  -fq query             get only rules that match a certain keyword in name or
+                        description (e.g. "-fq Mimikatz")
+  --nocrypto            filter all rules that require YARA to be compiled with
+                        crypto support (OpenSSL)
+```
+
+## Examples
+
+Check the status of the demo user subscription
+```bash
+valhalla-cli --check
+```
+
+Check the status of your subscription
+```bash
+valhalla-cli -k YOUR-API-KEY --check
+```
+
+Get all subscribed rules and save them to `valhalla-rules.yar`
+```bash
+valhalla-cli -k YOUR-API-KEY
+```
+
+Get rules with score higher than 75 and save them to `valhalla-rules.yar`
+```bash
+valhalla-cli -k YOUR-API-KEY -fs 75
+```
+
+Get rules that work with CarbonBlack and save them to `valhalla-april-cb.yar`
+```bash
+valhalla-cli -k YOUR-API-KEY -fp CarbonBlack -o valhalla-april-cb.yar
+```
+
+Get rules that contain the keyword `Mimikatz` and save them to `mimikatz-rules.yar`
+```bash
+valhalla-cli -k YOUR-API-KEY -fq Mimikatz -o mimikatz-rules.yar
+```
