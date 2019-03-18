@@ -1,6 +1,6 @@
 # valhallaAPI
 
-This module allows you to interact with the Valhalla API, retrieve rules in different formats, filter them and write them to disk.
+This module allows you to interact with the Valhalla API, retrieve YARA rules in different formats, filter them and write them to disk. You can find more information about Valhalla on [our website](https://www.nextron-systems.com/yara-rule-feed/). The web interface, which doesn't have the filtering features of the Python module and the client, can be accessed [here](https://valhalla.nextron-systems.com/). 
 
 It contains a Python module `valhallaAPI` and a Python command line API client `valhalla-cli`. 
 
