@@ -42,6 +42,12 @@ PRODUCT_REQUIREMENTS = {
         "reference": "https://twitter.com/RedSecSecurity/status/1103599203459129344",
         "with_crypto": False,   # assumption
     },
+    "GRR": {
+        "maximum_version": "3.6.3",
+        "supported_modules": [],  # assumption
+        "reference": "Open Source DFIR Slack",
+        "with_crypto": False,  # assumption
+    },
     "DummyTest": {
         "maximum_version": "1.7.0",
         "supported_modules": [],
