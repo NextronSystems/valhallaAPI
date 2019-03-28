@@ -7,7 +7,7 @@ YARA_SET_HEADER = """/*
     Generated for User: {{ user }}
     Number of Rules: {{ len_rules }}
     
-    ANY REPRODUCTION OR DISTRIBUTION IS STRICTLY PROHIBITED WITHOUT THE PRIOR WRITTEN CONSENT OF NEXTRON SYSTEMS AND MAY RESULT IN LEGAL ACTION AS WELL AS THE TERMINATION OF THE CONTRACTUAL RELATIONSHIP
+    {{ legal_note }}
 */
 """
 
@@ -25,6 +25,7 @@ def generate_header(rules_response):
     yara_set_header = yara_set_header.replace('{{ date }}', datetime.utcnow().strftime("%Y-%m-%d %H:%M"))
     yara_set_header = yara_set_header.replace('{{ user }}', rules_response['customer'])
     yara_set_header = yara_set_header.replace('{{ len_rules }}', str(len(rules_response['rules'])))
+    yara_set_header = yara_set_header.replace('{{ legal_note }}', rules_response['legal_note'])
     header_elements.append(yara_set_header)
 
     # Required modules
