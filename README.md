@@ -245,7 +245,17 @@ Install Python3 and then run the following command:
 ```bash
 pip3 install valhallaAPI
 ```
-You should then be able to run `valhalla-cli` from command line.
+You should then be able to run `valhalla-cli` from command line using a Linux or macOS system. 
+
+On Windows, do the following:
+```bash
+where valhalla-cli
+```
+Copy the full path and then run 
+```bash
+python C:\Python37\Scripts\valhalla-cli
+```
+or just download the precompiled `valhalla-cli.exe` from the latest release in the `release` section. 
 
 ## Usage
 
