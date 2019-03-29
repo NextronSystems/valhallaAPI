@@ -13,7 +13,7 @@ import json
 import requests
 from urllib.parse import urlparse
 from .filters import *
-from .helper import generate_header
+from .helper import generate_header, transform_license
 # from requests.auth import HTTPProxyAuth  # not yet used
 
 
@@ -146,6 +146,11 @@ class ValhallaAPI(object):
                           proxies=self.proxies)
         # Load JSON
         rules_response = json.loads(r.text)
+
+        # Demo --------------------------------------------------------
+        # Remove copyright
+        if self.api_key == self.DEMO_KEY:
+            transform_license(rules_response, "CC-BY-NC https://creativecommons.org/licenses/by-nc/4.0/")
 
         # Filter ------------------------------------------------------
         # Product filtering

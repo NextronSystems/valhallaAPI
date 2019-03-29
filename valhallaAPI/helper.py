@@ -1,4 +1,5 @@
 
+import re
 from datetime import datetime
 
 YARA_SET_HEADER = """/*
@@ -36,3 +37,17 @@ def generate_header(rules_response):
     for module in required_modules:
         header_elements.append('import "{0}"'.format(module))
     return "\n".join(header_elements)
+
+
+def transform_license(rules_response, new_copyright):
+    """
+    Transforms the license notice to a CC license (used for the demo rule set)
+    :param rules_response: the retrieved rule set as python object
+    :param new_copyright: the new copyright statement
+    :return:
+    """
+    new_copyright_string = 'license = "%s"' % new_copyright
+    re_copyright = re.compile(r'license = \"[^"]+\"')
+    for rule in rules_response['rules']:
+        rule["content"] = re_copyright.sub(new_copyright_string, rule["content"])
+    return rules_response
