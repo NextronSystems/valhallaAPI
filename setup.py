@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="valhallaAPI",
-    version="0.2.1",
+    version="0.2.2",
     author="Nextron",
     author_email="venom14@gmail.com",
     description="Valhalla API Client",
