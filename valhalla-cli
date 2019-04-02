@@ -102,6 +102,10 @@ if __name__ == '__main__':
     if args.ft:
         tags = args.ft[0]
 
+    # Score warning
+    if args.fs == 0:
+        Log.warning("Note that an unfiltered set (-fs 0) contains low scoring rules used for threat hunting purposes")
+
     # Info output
     Log.info("Retrieving rules with params PRODUCT: %s MAX_VERSION: %s MODULES: %s WITH_CRYPTO: %s TAGS: %s "
              "SCORE: %s QUERY: %s" % (
