@@ -52,7 +52,7 @@ Get a service status (does not require a valid API key)
 from valhallaAPI.valhalla import ValhallaAPI
 
 v = ValhallaAPI(api_key="")
-status = v.test_status()
+status = v.get_status()
 ```
 
 ### Text Rules
@@ -83,7 +83,7 @@ Get all subscribed rules for your scan engine, which suppports YARA up to versio
 response = v.get_rules_text(max_version="3.2.0", modules=['pe'])
 ```
 
-Get all subscribed rules for your `FireEyeNX`
+Get all subscribed rules for your `FireEyeEX`
 ```python
 
 from valhallaAPI.valhalla import ValhallaAPI
@@ -145,13 +145,14 @@ rule SUSP_Katz_PDB_RID664 : EXE SUSP DEMO FILE {
 
 Get all subscribed rules with the `APT` tag as `JSON` and save them to a file
 ```python
+import json
 from valhallaAPI.valhalla import ValhallaAPI
 
 v = ValhallaAPI(api_key="Your API Key")
 response = v.get_rules_json(tags=['APT'])
 
-with open('valhalla-rules.json') as fh:
-    fh.write(response)
+with open('valhalla-rules.json', 'w') as fh:
+    fh.write(json.dumps(response)) 
 ```
 
 An example response will look like
@@ -193,6 +194,8 @@ from valhallaAPI.valhalla import ValhallaAPI
 v = ValhallaAPI(api_key="Your API Key")
 response = v.get_rule_info(rulename="Casing_Anomaly_ByPass")
 ```
+
+Note that the rule info for `Casing_Anomaly_ByPass` is the only info that you can retrieve with the DEMO API key. 
 
 An example output of a rule info request will look like
 ```json
