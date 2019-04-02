@@ -8,7 +8,7 @@ import sys
 import argparse
 import logging
 import platform
-from valhallaAPI.valhalla import ValhallaAPI
+from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError
 
 
 if __name__ == '__main__':
@@ -115,6 +115,7 @@ if __name__ == '__main__':
              ))
 
     # Retrieve rules
+    try:
     response = v.get_rules_text(
         product=args.fp,
         max_version=args.fv,
@@ -124,6 +125,9 @@ if __name__ == '__main__':
         score=int(args.fs),
         search=args.fq,
     )
+    except UnknownProductError as e:
+        Log.error("Unknown product identifier - please use one of these: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
+        sys.exit(1)
 
     # Response information
     Log.info("Number of retrieved rules: %d" % v.last_retrieved_rules_count)
