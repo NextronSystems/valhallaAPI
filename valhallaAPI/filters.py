@@ -157,7 +157,7 @@ def filter_score(rules, minimum_score=0):
     filtered_rules = []
     # Process the rules
     for rule in rules:
-        if int(rule['score']) > minimum_score:
+        if int(rule['score']) >= minimum_score:
             filtered_rules.append(rule)
     return filtered_rules
 
