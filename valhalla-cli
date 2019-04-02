@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
     # Proxy
     if args.p:
-        Log.info("Setting proxy URL: %s USER: %s PASS: (hidden)" % (args.p, args.pu, args.pp))
+        Log.info("Setting proxy URL: %s USER: %s PASS: (hidden)" % (args.p, args.pu))
         if args.p.startswith("http:"):
             Log.warning("URL starts with http instead of https - you should use a TLS encrypted connection")
         v.set_proxy(args.p, args.pu, args.pp)
