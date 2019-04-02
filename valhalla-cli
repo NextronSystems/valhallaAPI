@@ -2,7 +2,7 @@
 # Valhalla API command line client
 # Florian Roth, 2019
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import sys
 import argparse
@@ -120,15 +120,15 @@ if __name__ == '__main__':
 
     # Retrieve rules
     try:
-    response = v.get_rules_text(
-        product=args.fp,
-        max_version=args.fv,
-        modules=modules,
-        with_crypto=args.nocrypto,
-        tags=tags,
-        score=int(args.fs),
-        search=args.fq,
-    )
+        response = v.get_rules_text(
+            product=args.fp,
+            max_version=args.fv,
+            modules=modules,
+            with_crypto=args.nocrypto,
+            tags=tags,
+            score=int(args.fs),
+            search=args.fq,
+        )
     except UnknownProductError as e:
         Log.error("Unknown product identifier - please use one of these: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
         sys.exit(1)
