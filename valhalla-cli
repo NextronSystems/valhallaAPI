@@ -34,7 +34,7 @@ if __name__ == '__main__':
     group_filter.add_argument('-fv', help='get rules that support the given YARA version and lower',
                               metavar='yara-version', default='')
     group_filter.add_argument('-fm', help='set a list of modules that your product supports (e.g. "-fm pe hash") '
-                                          '(setting no modules means taht all modules are supported by your product)',
+                                          '(setting no modules means that all modules are supported by your product)',
                               action='append', nargs='+', metavar='modules')
     group_filter.add_argument('-ft', help='set a list of tags to receive (e.g. "-ft APT MAL")',
                               action='append', nargs='+', metavar='tags')
