@@ -38,17 +38,19 @@ class ValhallaAPI(object):
     SYMANTECMAA = "SymantecMAA"
 
     PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA']
-
     DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
 
     # Cached info
     last_retrieved_rules_count = 0
 
-    def __init__(self, api_key):
+    def __init__(self, api_key=""):
         """
         Initializes the API client object
         :param api_key:
         """
+        # Demo API key if no API key was given
+        if api_key == "":
+            api_key = self.DEMO_KEY
 
         # API Key
         self.api_key = api_key

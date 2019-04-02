@@ -33,7 +33,7 @@ def test_subscription():
     Retrieves the subscription status of the current user
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI()
     response = v.get_subscription()
     print(response)
     assert len(response) == 5
