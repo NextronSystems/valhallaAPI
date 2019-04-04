@@ -137,6 +137,11 @@ if __name__ == '__main__':
     Log.info("Number of retrieved rules: %d" % v.last_retrieved_rules_count)
 
     # Output
-    Log.info("Writing retrieved rules into: %s" % args.o)
-    with open(args.o, 'w') as fh:
+    output_file = args.o
+    # Tanium accepts only the ".yara" extension for imports
+    if args.fp == "Tanium" and output_file== "valhalla-rules.yar":
+        output_file = "valhalla-rules.yara"
+    # Write to the output file
+    Log.info("Writing retrieved rules into: %s" % output_file)
+    with open(output_file, 'w') as fh:
         fh.write(response)
