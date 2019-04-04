@@ -37,7 +37,7 @@ The key will also allow you to query the rule info for a single rule, which is:
 Casing_Anomaly_ByPass
 ```
 
-Please note that Valhalla has protection mechanisms in place that will block your end of the Bifrost for a significant amount of time if you try stupid things.  
+Please note that Valhalla has protection mechanisms in place that will block your end of the Bifrost for a significant amount of time if you try foolish things.  
 
 ## Getting Started
 
