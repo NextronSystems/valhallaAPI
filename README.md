@@ -51,7 +51,7 @@ Get a service status (does not require a valid API key)
 ```python
 from valhallaAPI.valhalla import ValhallaAPI
 
-v = ValhallaAPI(api_key="")
+v = ValhallaAPI()
 status = v.get_status()
 ```
 
@@ -62,6 +62,17 @@ Get all subscribed rules as text and save them to a file
 from valhallaAPI.valhalla import ValhallaAPI
 
 v = ValhallaAPI(api_key="Your API Key")
+response = v.get_rules_text()
+
+with open('valhalla-rules.yar', 'w') as fh:
+    fh.write(response)
+```
+
+Or use the DEMO API key, which allows you to retrieve all public rules
+```python
+from valhallaAPI.valhalla import ValhallaAPI
+
+v = ValhallaAPI(api_key="1111111111111111111111111111111111111111111111111111111111111111")
 response = v.get_rules_text()
 
 with open('valhalla-rules.yar', 'w') as fh:
