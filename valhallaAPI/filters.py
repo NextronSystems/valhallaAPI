@@ -48,6 +48,12 @@ PRODUCT_REQUIREMENTS = {
         "reference": "Open Source DFIR Slack",
         "with_crypto": False,  # assumption
     },
+    "osquery": {
+        "maximum_version": "3.7.1",
+        "supported_modules": [],  # assumption
+        "reference": "Open Source DFIR Slack",
+        "with_crypto": False,  # assumption
+    },
     "DummyTest": {
         "maximum_version": "1.7.0",
         "supported_modules": [],
