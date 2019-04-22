@@ -36,8 +36,11 @@ class ValhallaAPI(object):
     TANIUM = "Tanium"
     TENABLE = "Tenable"
     SYMANTECMAA = "SymantecMAA"
+    GRR = "GRR"
+    OSQUERY = "osquery"
 
-    PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA']
+    PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA',
+                          'osquery', 'GRR']
     DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
 
     # Cached info
