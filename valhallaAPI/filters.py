@@ -50,9 +50,9 @@ PRODUCT_REQUIREMENTS = {
     },
     "osquery": {
         "maximum_version": "3.7.1",
-        "supported_modules": [],  # assumption
-        "reference": "Open Source DFIR Slack",
-        "with_crypto": False,  # assumption
+        "supported_modules": ["pe", "elf", "math"],  # assumption
+        "reference": "https://github.com/osql/osql/issues/11",
+        "with_crypto": True,  # https://github.com/facebook/osquery/blob/experimental/tools/provision/formula/yara.rb
     },
     "DummyTest": {
         "maximum_version": "1.7.0",
