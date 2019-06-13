@@ -22,6 +22,11 @@ The module provides functions to filter the retrieved YARA rules based on
 
 It also allows you to retrieve a filtered rule set that fits the product that you use to apply the rules. For example, you can get a filtered rule set with rules that will run on your `FireEyeEX` appliance by filtering all rules that use feature only available in YARA versions higher than the supported `1.7.0`. 
 
+There are 2 extra functions for special lookups in the Valhalla database (for customers only):
+
+- `get_rule_info` retrieves rule information and all matching sample hashes
+- `get_hash_info` retrieves all rules matching on a certain sha256 hash
+
 ## Demo Access
 
 There is a demo API key that can be used for testing purposes. 
@@ -245,6 +250,62 @@ An example output of a rule info request will look like
     "SUSP", 
     "CASING"
   ] 
+}
+```
+
+### Hash Info
+
+Get the information for hash `8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af`
+```python
+from valhallaAPI.valhalla import ValhallaAPI
+
+v = ValhallaAPI(api_key="Your API Key")
+response = v.get_rule_info(hash="8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af")
+```
+
+An example output of a hash info request will look like
+```json
+{
+    "api_version": "1.0.1",
+    "results": [
+        {
+            "positives": 4,
+            "rulename": "Casing_Anomaly_ByPass",
+            "tags": [
+                "T1027",
+                "SUSP",
+                "CASING"
+            ],
+            "timestamp": "Tue, 11 Jun 2019 23:57:10 GMT",
+            "total": 58
+        },
+        {
+            "positives": 4,
+            "rulename": "Casing_Anomaly_Convert_PS",
+            "tags": [
+                "T1027",
+                "CASING",
+                "SCRIPT",
+                "T1064"
+            ],
+            "timestamp": "Tue, 11 Jun 2019 23:57:12 GMT",
+            "total": 58
+        },
+        {
+            "positives": 4,
+            "rulename": "Casing_Anomaly_PowerShell",
+            "tags": [
+                "T1027",
+                "CASING",
+                "SCRIPT",
+                "T1064",
+                "T1086"
+            ],
+            "timestamp": "Tue, 11 Jun 2019 23:57:13 GMT",
+            "total": 58
+        }
+    ],
+    "status": "success"
 }
 ```
 
