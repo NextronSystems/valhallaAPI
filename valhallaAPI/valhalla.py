@@ -42,6 +42,7 @@ class ValhallaAPI(object):
     PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA',
                           'osquery', 'GRR']
     DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
+    DEFAULT_OUTPUT_FILE = 'valhalla-rules.yar'
 
     # Cached info
     last_retrieved_rules_count = 0
@@ -121,6 +122,7 @@ class ValhallaAPI(object):
     def get_rule_info(self, rulename):
         """
         Retrieve info for a given rule
+        :param rulename: name of the rule
         :return:
         """
         r = requests.post("%s/api/%s/ruleinfo" % (self.base_url, self.api_version),

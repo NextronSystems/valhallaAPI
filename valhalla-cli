@@ -5,9 +5,12 @@
 __version__ = "0.1.2"
 
 import sys
+import os
 import argparse
 import logging
 import platform
+import configparser
+from pathlib import Path
 from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError
 
 
@@ -15,7 +18,9 @@ if __name__ == '__main__':
     # Parse Arguments
     parser = argparse.ArgumentParser(description='Valhalla-CLI')
     parser.add_argument('-k', help='API KEY', metavar='apikey', default=ValhallaAPI.DEMO_KEY)
-    parser.add_argument('-o', help='output file', metavar='output-file', default='valhalla-rules.yar')
+    parser.add_argument('-c', help='Config file (see README for details)', metavar='config-file',
+                        default=os.path.join(str(Path.home()), ".valhalla"))
+    parser.add_argument('-o', help='output file', metavar='output-file', default=ValhallaAPI.DEFAULT_OUTPUT_FILE)
     parser.add_argument('--check', action='store_true', default=False,
                         help='Check subscription info and total rule count')
     parser.add_argument('--debug', action='store_true', default=False, help='Debug output')
@@ -68,13 +73,28 @@ if __name__ == '__main__':
     consoleHandler.setFormatter(logFormatter)
     Log.addHandler(consoleHandler)
 
-    # What will be done
-    if args.k == ValhallaAPI.DEMO_KEY:
+    # API Key
+    apikey = args.k
+    Log.info("Trying to read Valhalla config file at '%s' (set manually with -c)" % args.c)
+    if os.path.exists(args.c):
+        Log.debug("Config file found at '%s'" % args.c)
+        config = configparser.ConfigParser()
+        config.read(args.c)
+        if 'DEFAULT' not in config:
+            Log.error("section [DEFAULT] missing in config file - skipping this config")
+        else:
+            apikey = config['DEFAULT']['APIKEY']
+            Log.info("Successfully read config file")
+    else:
+        Log.info("No config file found, will rely on API KEY passed via cmd line arguments (-k)")
+
+    # Check key
+    if apikey == ValhallaAPI.DEMO_KEY:
         Log.warning("You are using the DEMO API key and will only retrieve the reduced open source signature set")
         Log.warning("Set your private API key with '-k APIKEY' to get the rule sets that your have subscribed")
 
     # Create the ValhallaAPI object
-    v = ValhallaAPI(api_key=args.k)
+    v = ValhallaAPI(api_key=apikey)
 
     # Subscription check
     if args.check:

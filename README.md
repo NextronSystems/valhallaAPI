@@ -346,6 +346,17 @@ Get rules that contain the keyword `Mimikatz` and save them to `mimikatz-rules.y
 valhalla-cli -k YOUR-API-KEY -fq Mimikatz -o mimikatz-rules.yar
 ```
 
+# Config File
+
+Valhalla-CLI will check `~/.valhalla` as the default location for a config file. 
+
+The config file currently contains nothing but the API key and mus look like:
+
+```ini
+[DEFAULT]
+APIKEY = 786feaef202a37a8d693c57b1aeb7c8995313e358b901015c4e60033776929c3
+```
+
 # Scores
 
 The following list explains the scores used in the rule set
