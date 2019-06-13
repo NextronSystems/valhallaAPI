@@ -209,7 +209,13 @@ class ValhallaAPI(object):
                                              score=score,
                                              search=search)
 
+        # Error
+        if 'status' in rules_response:
+            if rules_response['status'] == "error":
+                return json.dumps(rules_response)
+
         response_elements = list()
+
         # Generate header
         response_elements.append(generate_header(rules_response))
 
