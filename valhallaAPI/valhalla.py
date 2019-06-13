@@ -133,6 +133,20 @@ class ValhallaAPI(object):
                           proxies=self.proxies)
         return json.loads(r.text)
 
+    def get_hash_info(self, hash):
+        """
+        Retrieve rule matches for a given hash
+        :param hash: a sha256 hash of a sample
+        :return:
+        """
+        r = requests.post("%s/api/%s/hashinfo" % (self.base_url, self.api_version),
+                          data={
+                              "apikey": self.api_key,
+                              "sha256": hash,
+                          },
+                          proxies=self.proxies)
+        return json.loads(r.text)
+
     def get_rules_json(self, product="", max_version="", modules=[], with_crypto=True, tags=[], score=0, search=""):
         """
         Retrieve the rules as JSON object

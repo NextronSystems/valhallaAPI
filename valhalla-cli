@@ -9,6 +9,7 @@ import os
 import argparse
 import logging
 import platform
+import json
 import configparser
 from pathlib import Path
 from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError
@@ -49,6 +50,14 @@ if __name__ == '__main__':
                                           '(e.g. "-fq Mimikatz")', metavar='query', default='')
     group_filter.add_argument('--nocrypto', help='filter all rules that require YARA to be compiled with crypto '
                                                  'support (OpenSSL)', action='store_false', default=True)
+
+    group_proxy = parser.add_argument_group(
+        '=======================================================================\nLookup')
+    group_proxy.add_argument('-lr', help='Lookup a certain rule (returns matching samples)', metavar='lookup-rule',
+                             default='')
+    group_proxy.add_argument('-lh', help='Lookup a certain sample hash (sha256) (returns matching rules)',
+                             metavar='lookup-hash', default='')
+    group_proxy.add_argument('-lo', help='Output file for the lookup output', metavar='lookup-output', default='')
 
     args = parser.parse_args()
 
@@ -121,6 +130,24 @@ if __name__ == '__main__':
     tags = []
     if args.ft:
         tags = args.ft[0]
+
+    # Lookups
+    if args.lr != "" or args.lh != "":
+        # Rule Lookup
+        if args.lr != "":
+            r = v.get_rule_info(args.lr)
+        # Hash Lookup
+        if args.lh != "":
+            r = v.get_hash_info(args.lh)
+
+        # Write them to an output file
+        if args.lo:
+            with open(args.lo, 'w') as fh:
+                fh.write(json.dumps(r, indent=4, sort_keys=True))
+        else:
+            # Show results
+            print(json.dumps(r, indent=4, sort_keys=True))
+        sys.exit(0)
 
     # Score warning
     if args.fs == 0:

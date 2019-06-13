@@ -357,6 +357,118 @@ The config file currently contains nothing but the API key and mus look like:
 APIKEY = 786feaef202a37a8d693c57b1aeb7c8995313e358b901015c4e60033776929c3
 ```
 
+# Lookups 
+
+Valhalla-CLI has certain functions to perform lookups on its database. 
+
+The lookups return JSON output. You can use the `-lo file` option to save the JSON results to a file.
+
+## Hash Lookups
+
+Hash lookup can be used to search the Valhalla database for a certain hash (SHA256 only). 
+
+```bash
+./valhalla-cli -lh 8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af
+```
+
+It will return a JSON structure. 
+
+````json
+{
+    "api_version": "1.0.1",
+    "results": [
+        {
+            "positives": 4,
+            "rulename": "Casing_Anomaly_ByPass",
+            "tags": [
+                "T1027",
+                "SUSP",
+                "CASING"
+            ],
+            "timestamp": "Tue, 11 Jun 2019 23:57:10 GMT",
+            "total": 58
+        },
+        {
+            "positives": 4,
+            "rulename": "Casing_Anomaly_Convert_PS",
+            "tags": [
+                "T1027",
+                "CASING",
+                "SCRIPT",
+                "T1064"
+            ],
+            "timestamp": "Tue, 11 Jun 2019 23:57:12 GMT",
+            "total": 58
+        },
+        {
+            "positives": 4,
+            "rulename": "Casing_Anomaly_PowerShell",
+            "tags": [
+                "T1027",
+                "CASING",
+                "SCRIPT",
+                "T1064",
+                "T1086"
+            ],
+            "timestamp": "Tue, 11 Jun 2019 23:57:13 GMT",
+            "total": 58
+        }
+    ],
+    "status": "success"
+}
+````
+
+## Rule Lookups
+
+Rule lookups can be used to search the Valhalla database for a certain rule and their matches (premium feature). 
+
+```bash
+./valhalla-cli -lr Casing_Anomaly_ByPass
+```
+
+It will return a JSON structure. 
+
+````json
+{
+    "author": "Florian Roth",
+    "av_ratio": 18.3,
+    "av_verdicts": {
+        "clean": 10,
+        "malicious": 59,
+        "suspicious": 52
+    },
+    "date": "2019-01-17 11:50:21",
+    "description": "Detects suspicious casing of bypass statement",
+    "minimum_yara": "1.7",
+    "name": "Casing_Anomaly_ByPass_RID2F47",
+    "reference": "Internal Research",
+    "required_modules": [],
+    "rule_hash": "69b40d02020addf42cd12d3449933a3f",
+    "rule_matches": [
+        {
+            "hash": "8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af",
+            "positives": 4,
+            "size": 5645,
+            "timestamp": "Tue, 11 Jun 2019 23:57:10 GMT",
+            "total": 58
+        },
+        {
+            "hash": "6999c997b09754fa100779af9d23a005c2a5b8944ee46175857e58e47626de65",
+            "positives": 11,
+            "size": 1830,
+            "timestamp": "Tue, 11 Jun 2019 08:46:05 GMT",
+            "total": 58
+        },
+    ],
+    "score": 60,
+    "tags": [
+        "T1027",
+        "SUSP",
+        "CASING"
+    ]
+}
+````
+
 # Scores
 
 The following list explains the scores used in the rule set

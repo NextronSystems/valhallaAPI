@@ -4,6 +4,7 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from valhallaAPI.valhalla import ValhallaAPI
 
 DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
+INVALID_KEY = "invalid"
 RULES_TEXT = "VALHALLA YARA RULE SET"
 RULE_INFO_TEST = "Casing_Anomaly_ByPass"  # Only rule info allowed for DEMO user
 RULE_INFO_DISALLOWED = "SUSP_Office_Dropper_Strings"  # not allowed for demo user
@@ -157,4 +158,38 @@ def test_demo_rules_text():
     response = v.get_rules_text()
     assert RULES_TEXT in response
     assert len(response) > 500
+
+
+def test_invalid_key():
+    """
+    Trying to retrieve rules with an invalid key
+    :return:
+    """
+    v = ValhallaAPI(api_key=INVALID_KEY)
+    response = v.get_rules_text()
+    assert 'status' in response
+    assert 'error' in response
+    assert len(response) < 500
+
+
+def test_get_rule_info():
+    """
+    Trying to retrieve info for a certain rule (the only one accessible with DEMO key)
+    :return:
+    """
+    v = ValhallaAPI(api_key=DEMO_KEY)
+    response = v.get_rule_info('Casing_Anomaly_ByPass')
+    assert len(response) > 1
+    assert len(response['rule_matches']) > 0
+
+
+def test_get_hash_info():
+    """
+    Trying to retrieve info for a certain hash (the only one accessible with DEMO key)
+    :return:
+    """
+    v = ValhallaAPI(api_key=DEMO_KEY)
+    response = v.get_hash_info('8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af')
+    assert len(response) > 1
+    assert len(response['results']) > 0
 
