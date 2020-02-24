@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Valhalla API command line client
-# Florian Roth, 2019
+# Florian Roth, 2020
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 import sys
 import os
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     print("  | | / /__ _/ / /  ___ _/ / /__ _____/ ___/ /  /  _/ ")
     print("  | |/ / _ `/ / _ \\/ _ `/ / / _ `/___/ /__/ /___/ /   ")
     print("  |___/\\_,_/_/_//_/\\_,_/_/_/\\_,_/    \\___/____/___/   ")
-    print("   Ver. %s, Florian Roth, 2019                        " % __version__)
+    print("   Ver. %s, Florian Roth, 2020                        " % __version__)
     print(" ")
     print("===========================================================")
     print(" ")
@@ -108,11 +108,15 @@ if __name__ == '__main__':
     # Subscription check
     if args.check:
         status = v.get_subscription()
-        if status['active']:
-            Log.info("Account is active: %s" % status)
-            sys.exit(0)
+        if 'active' in status:
+            if status['active']:
+                Log.info("Account is active: %s" % status)
+                sys.exit(0)
+            else:
+                Log.error("Account is inactive: %s" % status)
+                sys.exit(1)
         else:
-            Log.error("Account is inactive: %s" % status)
+            Log.error("Error: %s" % status['message'])
             sys.exit(1)
 
     # Proxy
