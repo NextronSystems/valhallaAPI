@@ -212,7 +212,7 @@ class ValhallaAPI(object):
         # Error
         if 'status' in rules_response:
             if rules_response['status'] == "error":
-                return json.dumps(rules_response)
+                raise ApiError(rules_response['message'])
 
         response_elements = list()
 

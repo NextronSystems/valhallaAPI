@@ -63,9 +63,19 @@ PRODUCT_REQUIREMENTS = {
 
 REGEX_CRYPTO_FEATURES = r'( pe\.imphash| pe\.signatures| hash\.)'
 
+
 class UnknownProductError(Exception):
     """
     Unknown product exception
+    """
+    def __init__(self, message):
+        Exception.__init__(self)
+        self.message = message
+
+
+class ApiError(Exception):
+    """
+    API error exception
     """
     def __init__(self, message):
         Exception.__init__(self)

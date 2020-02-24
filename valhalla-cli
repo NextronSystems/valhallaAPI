@@ -12,7 +12,7 @@ import platform
 import json
 import configparser
 from pathlib import Path
-from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError
+from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError, ApiError
 
 
 if __name__ == '__main__':
@@ -182,6 +182,9 @@ if __name__ == '__main__':
         )
     except UnknownProductError as e:
         Log.error("Unknown product identifier - please use one of these: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
+        sys.exit(1)
+    except ApiError as e:
+        Log.error(e.message)
         sys.exit(1)
 
     # Response information
