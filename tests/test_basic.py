@@ -1,4 +1,5 @@
 from os import sys, path
+import pytest
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 from valhallaAPI.valhalla import ValhallaAPI
@@ -166,10 +167,8 @@ def test_invalid_key():
     :return:
     """
     v = ValhallaAPI(api_key=INVALID_KEY)
-    response = v.get_rules_text()
-    assert 'status' in response
-    assert 'error' in response
-    assert len(response) < 500
+    with pytest.raises(Exception):
+        v.get_rules_text()
 
 
 def test_get_rule_info():
