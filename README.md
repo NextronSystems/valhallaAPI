@@ -60,6 +60,16 @@ v = ValhallaAPI()
 status = v.get_status()
 ```
 
+Response 
+```
+{
+  "error": "none", 
+  "num_rules": 10463, 
+  "status": "green", 
+  "version": 2020051212
+}
+```
+
 ### Text Rules
 
 Get all subscribed rules as text and save them to a file
