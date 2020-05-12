@@ -211,7 +211,7 @@ v = ValhallaAPI(api_key="Your API Key")
 response = v.get_rule_info(rulename="Casing_Anomaly_ByPass")
 ```
 
-Note that the rule info for `Casing_Anomaly_ByPass` is the only info that you can retrieve with the DEMO API key. 
+IMPORTANT: The rule info endpoint is rate limited. You can use it for single lookups. Bulk requests lead to bans.
 
 An example output of a rule info request will look like
 ```json
