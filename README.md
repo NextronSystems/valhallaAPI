@@ -134,6 +134,10 @@ The following products have predefined presets
     TANIUM = "Tanium"
     TENABLE = "Tenable"
     SYMANTECMAA = "SymantecMAA"
+    GRR = "GRR"
+    OSQUERY = "osquery"
+    MATD3 = "McAfeeATD3"
+    MATD4 = "McAfeeATD4"  
 ```
 
 An example response will look like
