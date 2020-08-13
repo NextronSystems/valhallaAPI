@@ -38,9 +38,11 @@ class ValhallaAPI(object):
     SYMANTECMAA = "SymantecMAA"
     GRR = "GRR"
     OSQUERY = "osquery"
+    MATD3 = "McAfeeATD3"
+    MATD4 = "McAfeeATD4"
 
     PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA',
-                          'osquery', 'GRR']
+                          'osquery', 'GRR', 'McAfeeATD3', 'McAfeeATD4']
     DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
     DEFAULT_OUTPUT_FILE = 'valhalla-rules.yar'
 
