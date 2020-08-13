@@ -1,5 +1,4 @@
 import re
-import traceback
 from packaging import version
 
 # Product Requirements
