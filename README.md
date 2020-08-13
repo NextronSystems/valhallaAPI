@@ -47,8 +47,9 @@ Please note that Valhalla has protection mechanisms in place that will block you
 ## Getting Started
 
 ```bash
-pip3 install valhallaAPI
+pip install valhallaAPI
 ```
+(make sure to use Python3.6+)
 
 ## Usage
 
@@ -416,6 +417,11 @@ valhalla-cli -k YOUR-API-KEY -fp CarbonBlack -o valhalla-april-cb.yar
 Get rules that contain the keyword `Mimikatz` and save them to `mimikatz-rules.yar`
 ```bash
 valhalla-cli -k YOUR-API-KEY -fq Mimikatz -o mimikatz-rules.yar
+```
+
+Get a set of rules with the highest compatibilty (lowest requirements) using the demo API key
+```bash
+valhalla-cli -fv 1.7
 ```
 
 # Config File
