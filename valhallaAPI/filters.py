@@ -54,6 +54,12 @@ PRODUCT_REQUIREMENTS = {
         "reference": "https://github.com/osql/osql/issues/11",
         "with_crypto": True,  # https://github.com/facebook/osquery/blob/experimental/tools/provision/formula/yara.rb
     },
+    "McAfeeATD": {
+        "maximum_version": "3.0",
+        "supported_modules": ["pe", "elf", "math"],  # assumption
+        "reference": "https://docs.mcafee.com/exports/pdf/jobs/download/pdf/238025",
+        "with_crypto": True,
+    },
     "DummyTest": {
         "maximum_version": "1.7.0",
         "supported_modules": [],
