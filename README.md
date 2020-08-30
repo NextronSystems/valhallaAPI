@@ -8,11 +8,10 @@ It contains a Python module `valhallaAPI` and a Python command line API client `
 
 The web API allows you to retrieve the subscribed rules. 
 
-The 3 main functions of the Python module are:
+The 2 main functions of the Python module are:
 
 - `get_rules_text()` retrieves rules as text
 - `get_rules_json()` retrieves rules as JSON
-- `get_rule_info()` queries that DB for info on a certain rule (e.g. hashes of samples, AV detection ratio)
 
 The module provides functions to filter the retrieved YARA rules based on 
 - tags
@@ -276,7 +275,7 @@ Get the information for hash `8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c
 from valhallaAPI.valhalla import ValhallaAPI
 
 v = ValhallaAPI(api_key="Your API Key")
-response = v.get_rule_info(hash="8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af")
+response = v.get_hash_info(hash="8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af")
 ```
 
 An example output of a hash info request will look like
