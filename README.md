@@ -270,7 +270,8 @@ An example output of a rule info request will look like
 
 ### Hash Info
 
-Get the information for hash `8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af`
+Get the information for hash `8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af` (only SHA256 hashes are supported)
+
 ```python
 from valhallaAPI.valhalla import ValhallaAPI
 
