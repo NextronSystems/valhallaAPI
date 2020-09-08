@@ -94,7 +94,7 @@ class ValhallaAPI(object):
         Returns a poem to see if Valhalla is up and running
         :return:
         """
-        r = requests.get("%s/quote" % self.base_url, verify=self.verify_ssl)
+        r = requests.get("%s/quote" % self.base_url, verify=self.verify_ssl, proxies=self.proxies)
         return r.text
 
     def get_status(self):
