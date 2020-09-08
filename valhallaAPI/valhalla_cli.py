@@ -2,7 +2,7 @@
 # Valhalla API command line client
 # Florian Roth, 2020
 
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 
 import sys
 import os
@@ -15,7 +15,11 @@ from pathlib import Path
 from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError, ApiError
 
 
-if __name__ == '__main__':
+def main():
+    """
+    Main Function (used as entry point)
+    :return:
+    """
     # Parse Arguments
     parser = argparse.ArgumentParser(description='Valhalla-CLI')
     parser.add_argument('-k', help='API KEY', metavar='apikey', default=ValhallaAPI.DEMO_KEY)
@@ -199,3 +203,7 @@ if __name__ == '__main__':
     Log.info("Writing retrieved rules into: %s" % output_file)
     with open(output_file, 'w') as fh:
         fh.write(response)
+
+
+if __name__ == "__main__":
+    main()
