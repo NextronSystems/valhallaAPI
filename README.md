@@ -48,7 +48,10 @@ Please note that Valhalla has protection mechanisms in place that will block you
 ```bash
 pip install valhallaAPI
 ```
-(make sure to use Python3.6+)
+
+Notes: 
+- make sure to use Python 3.6 or higher
+- you may need to use `pip3 install valhallaAPI` on Debian systems
 
 ## Usage
 
