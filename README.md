@@ -328,6 +328,116 @@ An example output of a hash info request will look like
 }
 ```
 
+### Keyword Lookup
+
+(only available for customers)
+
+Get all rules based on a keyword search (e.g. `Turla`, `Bypass` or `PlugX`)
+
+```python
+from valhallaAPI.valhalla import ValhallaAPI
+
+v = ValhallaAPI(api_key="Your API Key")
+response = v.get_keyword_rules(keyword="Turla")
+```
+
+An example output of a keyword request will look like
+```json
+{
+    "api_version": "1.1.0",
+    "results": [
+        {
+            "date": "2020-12-02",
+            "description": "Detects forensic artefacts as reported in Turla Crutch report",
+            "name": "APT_RU_Turla_CrutchReport_ForensicArtefacts_Dec20_1",
+            "reference": "https://www.welivesecurity.com/2020/12/02/turla-crutch-keeping-back-door-open/",
+            "required_modules": []
+        },
+        {
+            "date": "2020-12-02",
+            "description": "Detects Turla Crutch malware",
+            "name": "APT_RU_Turla_CrutchReport_Crutch_Dec20_1",
+            "reference": "https://www.welivesecurity.com/2020/12/02/turla-crutch-keeping-back-door-open/",
+            "required_modules": []
+        },
+        ...
+    ],
+    "status": "success"
+}
+```
+
+### Keyword Matches Lookup
+
+(only available for customers)
+
+Get all sample matches of rules selected by keyword search (e.g. `Turla`, `Bypass` or `PlugX`)
+
+```python
+from valhallaAPI.valhalla import ValhallaAPI
+
+v = ValhallaAPI(api_key="Your API Key")
+response = v.get_keyword_rule_matches(keyword="LuckyMouse")
+```
+
+An example output of a keyword request will look like
+```json
+{
+    "api_version": "1.1.0",
+    "results": [
+        {
+            "hash": "00847787ea6568cfaaa762f4ee333b44f35a34e90858c1c8899144be016510ef",
+            "positives": 44,
+            "rulename": "APT_MAL_CN_LuckyMouse_Loader_Dec20_2",
+            "size": 81920,
+            "timestamp": "Mon, 28 Dec 2020 09:45:12 GMT",
+            "total": 70
+        },
+        {
+            "hash": "c2dc17bdf16a609cdb5a93bf153011d67c6206f7608931b1ca1c1d316b5ad54f",
+            "positives": 49,
+            "rulename": "APT_MAL_CN_LuckyMouse_Loader_Dec20_2",
+            "size": 81920,
+            "timestamp": "Thu, 10 Dec 2020 17:04:55 GMT",
+            "total": 68
+        },
+        {
+            "hash": "2b1d6a8538452e3b315283c124f6ee7e27dfd55f52996d3aa89a5919f80e0ef7",
+            "positives": 13,
+            "rulename": "APT_LuckyMouse_Mal_1",
+            "size": 81920,
+            "timestamp": "Fri, 23 Oct 2020 16:22:19 GMT",
+            "total": 70
+        },
+        {
+            "hash": "b85aee07213836bd8784852860ff3b180d71f36fd98d49cc432162aa2234f99d",
+            "positives": 12,
+            "rulename": "APT_MAL_LuckyMouse_EmissaryPanda_Gen_May19_1",
+            "size": 71680,
+            "timestamp": "Thu, 30 Jan 2020 20:18:48 GMT",
+            "total": 70
+        },
+        {
+            "hash": "a8a2221814aab518db0a48d9646f598d9da1bd6c749a792a3605a562eac79980",
+            "positives": 0,
+            "rulename": "APT_MAL_LuckyMouse_EmissaryPanda_Gen_May19_1",
+            "size": 45568,
+            "timestamp": "Sat, 07 Dec 2019 13:45:06 GMT",
+            "total": 68
+        },
+        {
+            "hash": "2dde8881cd9b43633d69dfa60f23713d7375913845ac3fe9b4d8a618660c4528",
+            "positives": 43,
+            "rulename": "APT_MAL_LuckyMouse_EmissaryPanda_Gen_May19_1",
+            "size": 71680,
+            "timestamp": "Thu, 30 May 2019 02:37:05 GMT",
+            "total": 70
+        }
+    ],
+    "status": "success"
+}
+```
+
+
 # API Client
 
 The API client allows you to query the Web API from command line. It requires Python3.  
@@ -354,17 +464,15 @@ or just download the precompiled `valhalla-cli.exe` from the latest release in t
 ## Usage
 
 ```
-usage: valhalla-cli [-h] [-k apikey] [-o output-file] [--check] [--debug]
-                    [-p proxy-url] [-pu proxy-user] [-pp proxy-pass]
-                    [-fp product] [-fv yara-version]
-                    [-fm modules [modules ...]] [-ft tags [tags ...]]
-                    [-fs score] [-fq query] [--nocrypto]
+usage: valhalla-cli [-h] [-k apikey] [-c config-file] [-o output-file] [--check] [--debug] [-p proxy-url] [-pu proxy-user] [-pp proxy-pass] [-fp product] [-fv yara-version] [-fm modules [modules ...]]
+                    [-ft tags [tags ...]] [-fs score] [-fq query] [--nocrypto] [-lr lookup-rule] [-lh lookup-hash] [-lk lookup-keyword] [-lkm lookup-keyword] [-lo lookup-output]
 
 Valhalla-CLI
 
 optional arguments:
   -h, --help            show this help message and exit
   -k apikey             API KEY
+  -c config-file        Config file (see README for details)
   -o output-file        output file
   --check               Check subscription info and total rule count
   --debug               Debug output
@@ -377,21 +485,22 @@ Proxy:
 
 =======================================================================
 Filter:
-  -fp product           filter product (valid products are: FireEyeAX,
-                        FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable,
-                        SymantecMAA)
-  -fv yara-version      get rules that support the given YARA version and
-                        lower
+  -fp product           filter product (valid products are: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable, SymantecMAA, osquery, GRR, McAfeeATD3, McAfeeATD4)
+  -fv yara-version      get rules that support the given YARA version and lower
   -fm modules [modules ...]
-                        set a list of modules that your product supports (e.g.
-                        "-fm pe hash") (setting no modules means taht all
-                        modules are supported by your product)
+                        set a list of modules that your product supports (e.g. "-fm pe hash") (setting no modules means that all modules are supported by your product)
   -ft tags [tags ...]   set a list of tags to receive (e.g. "-ft APT MAL")
   -fs score             minimum score of rules to retrieve (e.g. "-fs 75")
-  -fq query             get only rules that match a certain keyword in name or
-                        description (e.g. "-fq Mimikatz")
-  --nocrypto            filter all rules that require YARA to be compiled with
-                        crypto support (OpenSSL)
+  -fq query             get only rules that match a certain keyword in name or description (e.g. "-fq Mimikatz")
+  --nocrypto            filter all rules that require YARA to be compiled with crypto support (OpenSSL)
+
+=======================================================================
+Lookups:
+  -lr lookup-rule       Lookup a certain rule (returns matching samples)
+  -lh lookup-hash       Lookup a certain sample hash (sha256) (returns matching rules)
+  -lk lookup-keyword    Lookup rules with a certain keyword (returns matching rules)
+  -lkm lookup-keyword   Lookup hashes of samples on which rules have matches that contain a certain keyword (returns matching sample hashes)
+  -lo lookup-output     Output file for the lookup output
 ```
 
 ## Examples
@@ -426,9 +535,19 @@ Get rules that contain the keyword `Mimikatz` and save them to `mimikatz-rules.y
 valhalla-cli -k YOUR-API-KEY -fq Mimikatz -o mimikatz-rules.yar
 ```
 
-Get a set of rules with the highest compatibilty (lowest requirements) using the demo API key
+Get a set of rules with the highest compatibility (lowest requirements) using the demo API key
 ```bash
 valhalla-cli -fv 1.7
+```
+
+Get list of rules for the keyword `Turla`
+```bash
+valhalla-cli -k YOUR-API-KEY -lk Turla
+```
+
+Get all matches of rules that matched on the keyword `Turla` (limit 10,000 results)
+```bash
+valhalla-cli -k YOUR-API-KEY -lkm Turla
 ```
 
 # Config File
