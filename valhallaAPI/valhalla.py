@@ -149,6 +149,34 @@ class ValhallaAPI(object):
                           proxies=self.proxies)
         return json.loads(r.text)
 
+    def get_keyword_rules(self, keyword):
+        """
+        Retrieve rule matches for a given keyword (tag, string)
+        :param keyword: a keyword for a certain malware or group
+        :return:
+        """
+        r = requests.post("%s/api/%s/keyword" % (self.base_url, self.api_version),
+                          data={
+                              "apikey": self.api_key,
+                              "keyword": keyword,
+                          },
+                          proxies=self.proxies)
+        return json.loads(r.text)
+
+    def get_keyword_rule_matches(self, keyword):
+        """
+        Retrieve hash matches of rules on which a given keyword (tag, string) has matched
+        :param keyword: a keyword for a certain malware or group
+        :return:
+        """
+        r = requests.post("%s/api/%s/keyword-matches" % (self.base_url, self.api_version),
+                          data={
+                              "apikey": self.api_key,
+                              "keyword": keyword,
+                          },
+                          proxies=self.proxies)
+        return json.loads(r.text)
+
     def get_rules_json(self, product="", max_version="", modules=[], with_crypto=True, tags=[], score=0, search=""):
         """
         Retrieve the rules as JSON object

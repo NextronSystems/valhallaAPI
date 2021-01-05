@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+
+from valhallaAPI.valhalla_cli import main
+
+main()

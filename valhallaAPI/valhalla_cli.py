@@ -2,7 +2,7 @@
 # Valhalla API command line client
 # Florian Roth, 2020
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 import sys
 import os
@@ -56,11 +56,16 @@ def main():
                                                  'support (OpenSSL)', action='store_false', default=True)
 
     group_proxy = parser.add_argument_group(
-        '=======================================================================\nLookup')
+        '=======================================================================\nLookups')
     group_proxy.add_argument('-lr', help='Lookup a certain rule (returns matching samples)', metavar='lookup-rule',
                              default='')
     group_proxy.add_argument('-lh', help='Lookup a certain sample hash (sha256) (returns matching rules)',
                              metavar='lookup-hash', default='')
+    group_proxy.add_argument('-lk', help='Lookup rules with a certain keyword (returns matching rules)',
+                             metavar='lookup-keyword', default='')
+    group_proxy.add_argument('-lkm', help='Lookup hashes of samples on which rules have matches that contain a certain '
+                                          'keyword (returns matching sample hashes)',
+                             metavar='lookup-keyword', default='')
     group_proxy.add_argument('-lo', help='Output file for the lookup output', metavar='lookup-output', default='')
 
     args = parser.parse_args()
@@ -71,7 +76,7 @@ def main():
     print("  | | / /__ _/ / /  ___ _/ / /__ _____/ ___/ /  /  _/ ")
     print("  | |/ / _ `/ / _ \\/ _ `/ / / _ `/___/ /__/ /___/ /   ")
     print("  |___/\\_,_/_/_//_/\\_,_/_/_/\\_,_/    \\___/____/___/   ")
-    print("   Ver. %s, Florian Roth, 2020                        " % __version__)
+    print("   Ver. %s, Florian Roth, 2021                        " % __version__)
     print(" ")
     print("===========================================================")
     print(" ")
@@ -147,6 +152,12 @@ def main():
         # Hash Lookup
         if args.lh != "":
             r = v.get_hash_info(args.lh)
+        # Keyword to Rules Lookup
+        if args.lk != "":
+            r = v.get_keyword_rules(args.lk)
+        # Keyword to Rule Matches Lookup
+        if args.lkm != "":
+            r = v.get_keyword_rule_matches(args.lkm)
 
         # Write them to an output file
         if args.lo:
