@@ -145,7 +145,7 @@ def main():
         tags = args.ft[0]
 
     # Lookups
-    if args.lr != "" or args.lh != "":
+    if args.lr or args.lh or args.lk or args.lkm:
         # Rule Lookup
         if args.lr != "":
             r = v.get_rule_info(args.lr)
