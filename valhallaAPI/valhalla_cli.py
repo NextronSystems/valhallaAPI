@@ -2,7 +2,7 @@
 # Valhalla API command line client
 # Florian Roth, 2020
 
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 
 import sys
 import os

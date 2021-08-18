@@ -7,10 +7,11 @@
 #
 # Designed to work with API version 1
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 import json
 import requests
+import platform
 from urllib.parse import urlparse
 from .filters import *
 from .helper import generate_header
@@ -60,6 +61,9 @@ class ValhallaAPI(object):
 
         # API Key
         self.api_key = api_key
+        # Adjust user agent (add system info)
+        user_agent = "{0} {1}".format(requests.utils.default_headers()['User-Agent'], platform.system())
+        self.headers = {'User-Agent': user_agent}
 
     def set_proxy(self, proxy, user="", pwd=""):
         """
@@ -94,7 +98,7 @@ class ValhallaAPI(object):
         Returns a poem to see if Valhalla is up and running
         :return:
         """
-        r = requests.get("%s/quote" % self.base_url, verify=self.verify_ssl, proxies=self.proxies)
+        r = requests.get("%s/quote" % self.base_url, verify=self.verify_ssl, proxies=self.proxies, headers=self.headers)
         return r.text
 
     def get_status(self):
@@ -106,7 +110,8 @@ class ValhallaAPI(object):
                           data={
                               "apikey": self.api_key,
                           },
-                          proxies=self.proxies)
+                          proxies=self.proxies,
+                          headers=self.headers)
         return json.loads(r.text)
 
     def get_subscription(self):
@@ -118,7 +123,8 @@ class ValhallaAPI(object):
                           data={
                               "apikey": self.api_key,
                           },
-                          proxies=self.proxies)
+                          proxies=self.proxies,
+                          headers=self.headers)
         return json.loads(r.text)
 
     def get_rule_info(self, rulename):
@@ -132,7 +138,8 @@ class ValhallaAPI(object):
                               "apikey": self.api_key,
                               "rulename": rulename,
                           },
-                          proxies=self.proxies)
+                          proxies=self.proxies,
+                          headers=self.headers)
         return json.loads(r.text)
 
     def get_hash_info(self, hash):
@@ -146,7 +153,8 @@ class ValhallaAPI(object):
                               "apikey": self.api_key,
                               "sha256": hash,
                           },
-                          proxies=self.proxies)
+                          proxies=self.proxies,
+                          headers=self.headers)
         return json.loads(r.text)
 
     def get_keyword_rules(self, keyword):
@@ -160,7 +168,8 @@ class ValhallaAPI(object):
                               "apikey": self.api_key,
                               "keyword": keyword,
                           },
-                          proxies=self.proxies)
+                          proxies=self.proxies,
+                          headers=self.headers)
         return json.loads(r.text)
 
     def get_keyword_rule_matches(self, keyword):
@@ -174,7 +183,8 @@ class ValhallaAPI(object):
                               "apikey": self.api_key,
                               "keyword": keyword,
                           },
-                          proxies=self.proxies)
+                          proxies=self.proxies,
+                          headers=self.headers)
         return json.loads(r.text)
 
     def get_rules_json(self, product="", max_version="", modules=[], with_crypto=True, tags=[], score=0, search=""):
@@ -194,7 +204,8 @@ class ValhallaAPI(object):
                               "apikey": self.api_key,
                               "format": "json",
                           },
-                          proxies=self.proxies)
+                          proxies=self.proxies,
+                          headers=self.headers)
         # Load JSON
         rules_response = json.loads(r.text)
 
