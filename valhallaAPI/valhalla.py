@@ -7,7 +7,7 @@
 #
 # Designed to work with API version 1
 
-__version__ = "0.4.1"
+__version__ = "0.5.2"
 
 import json
 import requests
