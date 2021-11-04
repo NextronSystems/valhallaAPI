@@ -119,12 +119,6 @@ from valhallaAPI.valhalla import ValhallaAPI
 
 v = ValhallaAPI(api_key="Your API Key")
 response = v.get_rules_text(product="FireEyeEX")
-
-
-```
-Get all subscribed rules for your `Tanium`
-```python
-response = v.get_rules_text(product=v.TANIUM)
 ```
 
 The following products have predefined presets
@@ -133,13 +127,6 @@ The following products have predefined presets
     FIREEYENX = "FireEyeNX"
     FIREEYEEX = "FireEyeEX"
     CARBONBLACK = "CarbonBlack"
-    TANIUM = "Tanium"
-    TENABLE = "Tenable"
-    SYMANTECMAA = "SymantecMAA"
-    GRR = "GRR"
-    OSQUERY = "osquery"
-    MATD3 = "McAfeeATD3"
-    MATD4 = "McAfeeATD4"  
 ```
 
 An example response will look like
