@@ -9,6 +9,7 @@ INVALID_KEY = "invalid"
 RULES_TEXT = "VALHALLA YARA RULE SET"
 RULE_INFO_TEST = "Casing_Anomaly_ByPass"  # Only rule info allowed for DEMO user
 RULE_INFO_DISALLOWED = "SUSP_Office_Dropper_Strings"  # not allowed for demo user
+SIGMA_RULE_UUID = "06d71506-7beb-4f22-8888-e2e5e2ca7fd8"
 
 
 def test_quote():
@@ -192,3 +193,12 @@ def test_get_hash_info():
     assert len(response) > 1
     assert len(response['results']) > 0
 
+
+def test_demo_sigma_rules_json():
+    """
+    Retrieves the demo rules from the sigma rule feed
+    :return:
+    """
+    v = ValhallaAPI(api_key=DEMO_KEY)
+    response = v.get_sigma_rules_json()
+    assert len(response['rules']) > 0
