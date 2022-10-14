@@ -8,7 +8,7 @@ It contains a Python module `valhallaAPI` and a Python command line API client `
 
 The web API allows you to retrieve the subscribed rules. 
 
-The 3 main functions of the Python module are:
+The 4 main functions of the Python module are:
 
 - `get_rules_text()` retrieves YARA rules as text
 - `get_rules_json()` retrieves YARA rules as JSON

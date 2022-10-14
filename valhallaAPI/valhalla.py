@@ -7,7 +7,7 @@
 #
 # Designed to work with API version 1
 
-__version__ = "0.5.2"
+__version__ = "0.6.0"
 
 import io
 import json
