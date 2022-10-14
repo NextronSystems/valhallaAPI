@@ -9,9 +9,11 @@
 
 __version__ = "0.5.2"
 
+import io
 import json
 import requests
 import platform
+import zipfile
 from urllib.parse import urlparse
 from .filters import *
 from .helper import generate_header
@@ -137,6 +139,21 @@ class ValhallaAPI(object):
                           data={
                               "apikey": self.api_key,
                               "rulename": rulename,
+                          },
+                          proxies=self.proxies,
+                          headers=self.headers)
+        return json.loads(r.text)
+
+    def get_sigma_rule_info(self, ruleid):
+        """
+        Retrieve info for a given sigma rule
+        :param ruleid: UUID of the rule
+        :return:
+        """
+        r = requests.post("%s/api/%s/sigmaruleinfo" % (self.base_url, self.api_version),
+                          data={
+                              "apikey": self.api_key,
+                              "ruleid": ruleid,
                           },
                           proxies=self.proxies,
                           headers=self.headers)
@@ -268,3 +285,39 @@ class ValhallaAPI(object):
             response_elements.append(rule['content'])
 
         return "\n\n".join(response_elements)
+
+    def get_sigma_rules_json(self, search=""):
+        """
+        Retrieve the sigma rules as JSON object
+        :return:
+        """
+        # API Request
+        r = requests.post("%s/api/%s/getsigma" % (self.base_url, self.api_version),
+                          data={
+                              "apikey": self.api_key,
+                              "format": "json",
+                          },
+                          proxies=self.proxies,
+                          headers=self.headers)
+        # Load JSON
+        rules_response = json.loads(r.text)
+
+        if search:
+            rules_response['rules'] = filter_search(rules_response['rules'], query=search)
+        # Return filtered set
+        return rules_response
+
+    def get_sigma_rules_zip(self, search=""):
+        """
+        Retrieve the sigma rules as ZIP object
+        :return:
+        """
+        rules_response = self.get_sigma_rules_json(search)
+        
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(file=zip_buffer, mode='w') as zip_file:
+
+            for rule in rules_response['rules']:
+                zip_file.writestr("%s/%s" % (rule["type"].replace(" ", ""), rule["filename"]), rule["content"])
+
+        return zip_buffer.getbuffer().tobytes()

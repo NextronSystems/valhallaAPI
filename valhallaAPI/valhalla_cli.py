@@ -29,6 +29,7 @@ def main():
     parser.add_argument('--check', action='store_true', default=False,
                         help='Check subscription info and total rule count')
     parser.add_argument('--debug', action='store_true', default=False, help='Debug output')
+    parser.add_argument('-s', action='store_true', default=False, help='Load Sigma rules')
 
     group_proxy = parser.add_argument_group(
         '=======================================================================\nProxy')
@@ -148,7 +149,10 @@ def main():
     if args.lr or args.lh or args.lk or args.lkm:
         # Rule Lookup
         if args.lr != "":
-            r = v.get_rule_info(args.lr)
+            if args.s:
+                r = v.get_sigma_rule_info(args.lr)
+            else:
+                r = v.get_rule_info(args.lr)
         # Hash Lookup
         if args.lh != "":
             r = v.get_hash_info(args.lh)
@@ -186,15 +190,20 @@ def main():
 
     # Retrieve rules
     try:
-        response = v.get_rules_text(
-            product=args.fp,
-            max_version=args.fv,
-            modules=modules,
-            with_crypto=args.nocrypto,
-            tags=tags,
-            score=int(args.fs),
-            search=args.fq,
-        )
+        if args.s:
+            response = v.get_sigma_rules_zip(
+                search=args.fq,
+            )
+        else:
+            response = v.get_rules_text(
+                product=args.fp,
+                max_version=args.fv,
+                modules=modules,
+                with_crypto=args.nocrypto,
+                tags=tags,
+                score=int(args.fs),
+                search=args.fq,
+            )
     except UnknownProductError as e:
         Log.error("Unknown product identifier - please use one of these: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
         sys.exit(1)
@@ -208,12 +217,19 @@ def main():
     # Output
     output_file = args.o
     # Tanium accepts only the ".yara" extension for imports
-    if args.fp == "Tanium" and output_file== "valhalla-rules.yar":
+    if args.fp == "Tanium" and output_file == ValhallaAPI.DEFAULT_OUTPUT_FILE:
         output_file = "valhalla-rules.yara"
+    if args.s and output_file == ValhallaAPI.DEFAULT_OUTPUT_FILE:
+        output_file = "valhalla-rules.zip"
     # Write to the output file
     Log.info("Writing retrieved rules into: %s" % output_file)
-    with open(output_file, 'w') as fh:
-        fh.write(response)
+    if args.s:
+        with open(output_file, 'wb') as fh:
+            fh.write(response)
+    else:
+        with open(output_file, 'w') as fh:
+            fh.write(response)
+
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # valhallaAPI
 
-This module allows you to interact with the Valhalla API, retrieve YARA rules in different formats, filter them and write them to disk. You can find more information about Valhalla on [our website](https://www.nextron-systems.com/yara-rule-feed/). The web interface, which doesn't have the filtering features of the Python module and the client, can be accessed [here](https://valhalla.nextron-systems.com/). 
+This module allows you to interact with the Valhalla API, retrieve YARA and Sigma rules in different formats, filter them and write them to disk. You can find more information about Valhalla on [our website](https://www.nextron-systems.com/yara-rule-feed/). The web interface, which doesn't have the filtering features of the Python module and the client, can be accessed [here](https://valhalla.nextron-systems.com/). 
 
 It contains a Python module `valhallaAPI` and a Python command line API client `valhalla-cli`. 
 
@@ -8,14 +8,16 @@ It contains a Python module `valhallaAPI` and a Python command line API client `
 
 The web API allows you to retrieve the subscribed rules. 
 
-The 2 main functions of the Python module are:
+The 3 main functions of the Python module are:
 
-- `get_rules_text()` retrieves rules as text
-- `get_rules_json()` retrieves rules as JSON
+- `get_rules_text()` retrieves YARA rules as text
+- `get_rules_json()` retrieves YARA rules as JSON
+- `get_sigma_rules_zip()` retrieves Sigma rules as ZIP
+- `get_sigma_rules_json()` retrieves Sigma rules as JSON
 
-The module provides functions to filter the retrieved YARA rules based on 
+The module provides functions to filter the retrieved rules based on 
 - tags
-- score
+- score (YARA only)
 - keywords
 - supported YARA version and required YARA modules
 
@@ -25,6 +27,7 @@ There are 2 extra functions for special lookups in the Valhalla database (for cu
 
 - `get_rule_info` retrieves rule information and all matching sample hashes
 - `get_hash_info` retrieves all rules matching on a certain sha256 hash
+- `get_sigma_rule_info` retrieves sigma rule information
 
 ## Demo Access
 
@@ -34,7 +37,7 @@ There is a demo API key that can be used for testing purposes.
 1111111111111111111111111111111111111111111111111111111111111111
 ```
 
-It will allow you to retrieve the processed public [signature-base](https://github.com/Neo23x0/signature-base) rule set. 
+It will allow you to retrieve the processed public [signature-base](https://github.com/Neo23x0/signature-base) YARA and [SigmaHQ](https://github.com/SigmaHQ/sigma) Sigma rule sets.
 
 The key will also allow you to query the rule info for a single rule, which is:
 ```
@@ -461,6 +464,7 @@ optional arguments:
   -k apikey             API KEY
   -c config-file        Config file (see README for details)
   -o output-file        output file
+  -s                    Load sigma rules
   --check               Check subscription info and total rule count
   --debug               Debug output
 
@@ -505,6 +509,11 @@ valhalla-cli -k YOUR-API-KEY --check
 Get all subscribed rules and save them to `valhalla-rules.yar`
 ```bash
 valhalla-cli -k YOUR-API-KEY
+```
+
+Get all sigma rules and save them to `valhalla-rules.zip`
+```bash
+valhalla-cli -k YOUR-API-KEY -s
 ```
 
 Get rules with score higher than 75 and save them to `valhalla-rules.yar`
@@ -659,6 +668,12 @@ It will return a JSON structure.
     ]
 }
 ````
+
+To query sigma rules, add `-s`:
+
+```bash
+./valhalla-cli -s -lr 06d71506-7beb-4f22-8888-e2e5e2ca7fd8
+```
 
 # Scores
 
