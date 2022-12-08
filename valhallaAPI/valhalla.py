@@ -325,6 +325,6 @@ class ValhallaAPI(object):
         with zipfile.ZipFile(file=zip_buffer, mode='w') as zip_file:
 
             for rule in rules_response['rules']:
-                zip_file.writestr("%s/%s" % (rule["type"].replace(" ", ""), rule["filename"]), rule["content"])
+                zip_file.writestr("%s/%s/%s" % (rule["signature_type"], rule["type"].replace(" ", ""), rule["filename"]), rule["content"])
 
         return zip_buffer.getbuffer().tobytes()
