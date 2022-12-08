@@ -204,7 +204,7 @@ class ValhallaAPI(object):
                           headers=self.headers)
         return json.loads(r.text)
 
-    def get_rules_json(self, product="", max_version="", modules=[], with_crypto=True, tags=[], score=0, search=""):
+    def get_rules_json(self, product="", max_version="", modules=[], with_crypto=True, tags=[], score=0, search="", private_only=False):
         """
         Retrieve the rules as JSON object
         :param product: set a certain product that all rules must support
@@ -245,10 +245,14 @@ class ValhallaAPI(object):
                                                           sup_ver_string=max_version,
                                                           sup_modules=modules,
                                                           with_crypto=with_crypto)
+        # Public rules filter
+        if private_only:
+            rules_response['rules'] = filter_privateonly(rules_response['rules'])
+
         # Return filtered set
         return rules_response
 
-    def get_rules_text(self, product="", max_version="", modules=[], with_crypto=True, tags=[], score=0, search=""):
+    def get_rules_text(self, product="", max_version="", modules=[], with_crypto=True, tags=[], score=0, search="", private_only=False):
         """
         Retrieve the rules as JSON object, but converts them to text before returning them
         :param product: set a certain product that all rules must support
@@ -265,7 +269,8 @@ class ValhallaAPI(object):
                                              with_crypto=with_crypto,
                                              tags=tags,
                                              score=score,
-                                             search=search)
+                                             search=search,
+                                             private_only=private_only)
 
         # Error
         if 'status' in rules_response:
@@ -286,7 +291,7 @@ class ValhallaAPI(object):
 
         return "\n\n".join(response_elements)
 
-    def get_sigma_rules_json(self, search=""):
+    def get_sigma_rules_json(self, search="", private_only=False):
         """
         Retrieve the sigma rules as JSON object
         :return:
@@ -304,15 +309,17 @@ class ValhallaAPI(object):
 
         if search:
             rules_response['rules'] = filter_search(rules_response['rules'], query=search)
+        if private_only:
+            rules_response['rules'] = filter_privateonly(rules_response['rules'])
         # Return filtered set
         return rules_response
 
-    def get_sigma_rules_zip(self, search=""):
+    def get_sigma_rules_zip(self, search="", private_only=False):
         """
         Retrieve the sigma rules as ZIP object
         :return:
         """
-        rules_response = self.get_sigma_rules_json(search)
+        rules_response = self.get_sigma_rules_json(search, private_only)
         
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(file=zip_buffer, mode='w') as zip_file:

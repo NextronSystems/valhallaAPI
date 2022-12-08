@@ -155,6 +155,20 @@ def filter_requirements(rules, sup_ver_string, sup_modules=[], with_crypto=True)
 
     return filtered_rules
 
+def filter_privateonly(rules):
+    """
+    Filter the rules object for rules that are not available in the public rule set.
+    :param rules: YARA or sigma rules JSON object
+    :return: list of filtered rules
+    """
+    filtered_rules = []
+    for rule in rules:
+        if 'signature_type' in rule and rule['signature_type'] == "public":
+            continue
+        filtered_rules.append(rule)
+
+    return filtered_rules
+
 
 def filter_tags(rules, tags=[]):
     """

@@ -42,6 +42,8 @@ def main():
     group_filter.add_argument('-fp', help='filter product (valid products are: %s)' %
                                           ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER),
                               metavar='product', default='')
+    group_filter.add_argument('-fpo', help='only return rules that are not part of the public feed',
+                              action='store_true', default=False)
     group_filter.add_argument('-fv', help='get rules that support the given YARA version and lower',
                               metavar='yara-version', default='')
     group_filter.add_argument('-fm', help='set a list of modules that your product supports (e.g. "-fm pe hash") '
@@ -178,13 +180,14 @@ def main():
 
     # Info output
     Log.info("Retrieving rules with params PRODUCT: %s MAX_VERSION: %s MODULES: %s WITH_CRYPTO: %s TAGS: %s "
-             "SCORE: %s QUERY: %s" % (
+             "SCORE: %s PRIVATE_ONLY: %s QUERY: %s" % (
                  args.fp,
                  args.fv,
                  ", ".join(modules),
                  str(args.nocrypto),
                  ", ".join(tags),
                  str(args.fs),
+                 str(args.fpo),
                  args.fq
              ))
 
@@ -193,6 +196,7 @@ def main():
         if args.s:
             response = v.get_sigma_rules_zip(
                 search=args.fq,
+                private_only=args.fpo,
             )
         else:
             response = v.get_rules_text(
@@ -203,6 +207,7 @@ def main():
                 tags=tags,
                 score=int(args.fs),
                 search=args.fq,
+                private_only=args.fpo,
             )
     except UnknownProductError as e:
         Log.error("Unknown product identifier - please use one of these: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
