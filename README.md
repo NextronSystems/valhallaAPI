@@ -67,7 +67,7 @@ status = v.get_status()
 ```
 
 Response 
-```
+```json
 {
   "error": "none", 
   "num_rules": 10463, 
@@ -110,7 +110,7 @@ Get all subscribed rules that contain the keyword `Mimikatz` and save them to a 
 response = v.get_rules_text(search="Mimikatz")
 ```
 
-Get all subscribed rules for your scan engine, which suppports YARA up to version `3.2.0` and the `pe` module, and save them to a file
+Get all subscribed rules for your scan engine, which supports YARA up to version `3.2.0` and the `pe` module, and save them to a file
 ```python
 response = v.get_rules_text(max_version="3.2.0", modules=['pe'])
 ```
@@ -133,7 +133,7 @@ The following products have predefined presets
 ```
 
 An example response will look like
-```
+```yara
 /*
     VALHALLA YARA RULE SET
     Retrieved: 2019-02-25 14:54
