@@ -79,7 +79,7 @@ class ValhallaAPI(object):
         # Auth
         auth_string = ""
         if user:
-            auth_string = "{1}:{2}@".format(user, pwd)
+            auth_string = "{0}:{1}@".format(user, pwd)
         # Set the proxy
         self.proxies = {u.scheme: '{0}://{1}{2}/'.format(
             u.scheme,
