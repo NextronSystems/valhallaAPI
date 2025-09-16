@@ -202,3 +202,14 @@ def test_demo_sigma_rules_json():
     v = ValhallaAPI(api_key=DEMO_KEY)
     response = v.get_sigma_rules_json()
     assert len(response['rules']) > 0
+
+def test_get_rule_info_invalid():
+    """
+    Retrieves no rules since key is invalid
+    :return:
+    """
+    v = ValhallaAPI(api_key=INVALID_KEY)
+    response = v.get_rules_json()
+    assert response['status'] == 'error'
+    response2 = v.get_rules_json(score=75)
+    assert response2['status'] == 'error'
