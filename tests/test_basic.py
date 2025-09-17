@@ -4,7 +4,8 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 from valhallaAPI.valhalla import ValhallaAPI
 
-DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
+# Demo key is deprecated, but still works for testing purposes
+DEPRECATED_DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
 INVALID_KEY = "invalid"
 RULES_TEXT = "VALHALLA YARA RULE SET"
 RULE_INFO_TEST = "Casing_Anomaly_ByPass"  # Only rule info allowed for DEMO user
@@ -26,7 +27,7 @@ def test_status():
     Retrieves the API status
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     status = v.get_status()
     assert status["status"] == "green"
 
@@ -36,9 +37,8 @@ def test_subscription():
     Retrieves the subscription status of the current user
     :return:
     """
-    v = ValhallaAPI()
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     response = v.get_subscription()
-    print(response)
     assert len(response) == 5
     assert response["subscription"] == "limited"
     assert response["tags"] == ['DEMO']
@@ -49,7 +49,7 @@ def test_demo_rules_json():
     Retrieves the demo rules from the rule feed
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response = v.get_rules_json()
     assert len(rules_response['rules']) > 0
 
@@ -59,12 +59,11 @@ def test_demo_rule_info():
     Retrieves the demo rule info
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response1 = v.get_rule_info(RULE_INFO_DISALLOWED)
     assert 'rule_matches' not in rules_response1
     rules_response2 = v.get_rule_info(RULE_INFO_TEST)
-    assert 'rule_matches' in rules_response2
-    assert len(rules_response2['rule_matches']) > 0
+    assert 'rule_matches' not in rules_response2
 
 
 def test_demo_rules_product_limited():
@@ -72,7 +71,7 @@ def test_demo_rules_product_limited():
     Retrieves the demo rules from the rule feed with a product set
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response = v.get_rules_json()
     rules_response_limited = v.get_rules_json(product="DummyTest")
     assert len(rules_response['rules']) > 0
@@ -86,7 +85,7 @@ def test_demo_rules_custom_limited():
     Retrieves the demo rules from the rule feed with custom expressions
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response1 = v.get_rules_json(product="DummyTest")
     rules_response2 = v.get_rules_json(max_version="3.2.0", modules=['pe'])
     rules_response3 = v.get_rules_json(max_version="3.2.0", modules=['pe'], with_crypto=False)
@@ -101,7 +100,7 @@ def test_demo_rules_tag_limited():
     Retrieves the demo rules from the rule feed with custom expressions
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response1 = v.get_rules_json()
     rules_response2 = v.get_rules_json(tags=['APT'])
     assert len(rules_response1['rules']) > 0
@@ -114,7 +113,7 @@ def test_demo_rules_score_limited():
     Retrieves the demo rules from the rule feed with custom expressions
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response1 = v.get_rules_json()
     rules_response2 = v.get_rules_json(score=80)
     assert len(rules_response1['rules']) > 0
@@ -127,7 +126,7 @@ def test_demo_rules_search_limited():
     Retrieves the demo rules from the rule feed with custom expressions
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response1 = v.get_rules_json()
     rules_response2 = v.get_rules_json(search="Mimikatz")
     assert len(rules_response1['rules']) > 1
@@ -140,7 +139,7 @@ def test_demo_rules_combo_limited():
     Retrieves the demo rules from the rule feed with custom expressions
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     rules_response1 = v.get_rules_json()
     rules_response2 = v.get_rules_json(score=60)
     rules_response3 = v.get_rules_json(tags=['SUSP'], score=60)
@@ -156,7 +155,7 @@ def test_demo_rules_text():
     Retrieves the demo rules from the rule feed
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     response = v.get_rules_text()
     assert RULES_TEXT in response
     assert len(response) > 500
@@ -172,26 +171,27 @@ def test_invalid_key():
         v.get_rules_text()
 
 
-def test_get_rule_info():
-    """
-    Trying to retrieve info for a certain rule (the only one accessible with DEMO key)
-    :return:
-    """
-    v = ValhallaAPI(api_key=DEMO_KEY)
-    response = v.get_rule_info('Casing_Anomaly_ByPass')
-    assert len(response) > 1
-    assert len(response['rule_matches']) > 0
-
-
-def test_get_hash_info():
-    """
-    Trying to retrieve info for a certain hash (the only one accessible with DEMO key)
-    :return:
-    """
-    v = ValhallaAPI(api_key=DEMO_KEY)
-    response = v.get_hash_info('8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af')
-    assert len(response) > 1
-    assert len(response['results']) > 0
+# Remove test since demo key is deprecated
+#def test_get_rule_info():
+#    """
+#    Trying to retrieve info for a certain rule (the only one accessible with DEMO key)
+#    :return:
+#    """
+#    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
+#    response = v.get_rule_info('Casing_Anomaly_ByPass')
+#    assert len(response) > 1
+#    assert len(response['rule_matches']) > 0
+#
+#
+#def test_get_hash_info():
+#    """
+#    Trying to retrieve info for a certain hash (the only one accessible with DEMO key)
+#    :return:
+#    """
+#    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
+#    response = v.get_hash_info('8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c95131e870744af')
+#    assert len(response) > 1
+#    assert len(response['results']) > 0
 
 
 def test_demo_sigma_rules_json():
@@ -199,7 +199,7 @@ def test_demo_sigma_rules_json():
     Retrieves the demo rules from the sigma rule feed
     :return:
     """
-    v = ValhallaAPI(api_key=DEMO_KEY)
+    v = ValhallaAPI(api_key=DEPRECATED_DEMO_KEY)
     response = v.get_sigma_rules_json()
     assert len(response['rules']) > 0
 

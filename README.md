@@ -31,6 +31,8 @@ There are 2 extra functions for special lookups in the Valhalla database (for cu
 
 ## Demo Access
 
+> Important: Teh dem API key is not available and demo access is not possible anymore. Hence, the following section and everything regarding the given demo API key is outdated.
+
 There is a demo API key that can be used for testing purposes. 
 
 ```

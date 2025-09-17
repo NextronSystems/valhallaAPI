@@ -46,7 +46,7 @@ class ValhallaAPI(object):
 
     PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA',
                           'osquery', 'GRR', 'McAfeeATD3', 'McAfeeATD4']
-    DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
+    # DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
     DEFAULT_OUTPUT_FILE = 'valhalla-rules.yar'
 
     # Cached info
@@ -57,9 +57,9 @@ class ValhallaAPI(object):
         Initializes the API client object
         :param api_key:
         """
-        # Demo API key if no API key was given
-        if api_key == "":
-            api_key = self.DEMO_KEY
+        # Demo API key if no API key was given -> empty API key if no API key was given
+        # if api_key == "":
+        #     api_key = self.DEMO_KEY
 
         # API Key
         self.api_key = api_key
