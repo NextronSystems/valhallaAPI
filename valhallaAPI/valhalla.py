@@ -7,7 +7,7 @@
 #
 # Designed to work with API version 1
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 import io
 import json
@@ -32,20 +32,25 @@ class ValhallaAPI(object):
     proxies = {}
 
     # Product Identifier
-    FIREEYEAX = "FireEyeAX"
-    FIREEYENX = "FireEyeNX"
-    FIREEYEEX = "FireEyeEX"
+    FIREEYEAX_912_915 = "FireEyeAX_912_915"
+    FIREEYEAX_900_911 = "FireEyeAX_900_911"
+    FIREEYEAX_83x_84x = "FireEyeAX_83x_84x"
+    FIREEYENX_912_915 = "FireEyeNX_912_915"
+    FIREEYENX_900_911 = "FireEyeNX_900_911"
+    FIREEYENX_83x = "FireEyeNX_83x"
+    FIREEYEEX_912_915 = "FireEyeEX_912_915"
+    FIREEYEEX_900_911 = "FireEyeEX_900_911"
+    FIREEYEEX_82x_84x = "FireEyeEX_82x_84x"
     CARBONBLACK = "CarbonBlack"
     TANIUM = "Tanium"
     TENABLE = "Tenable"
-    SYMANTECMAA = "SymantecMAA"
     GRR = "GRR"
     OSQUERY = "osquery"
-    MATD3 = "McAfeeATD3"
-    MATD4 = "McAfeeATD4"
 
-    PRODUCT_IDENTIFIER = ['FireEyeAX', 'FireEyeNX', 'FireEyeEX', 'CarbonBlack', 'Tanium', 'Tenable', 'SymantecMAA',
-                          'osquery', 'GRR', 'McAfeeATD3', 'McAfeeATD4']
+    PRODUCT_IDENTIFIER = ['FireEyeAX_912_915', 'FireEyeAX_900_911', 'FireEyeAX_83x_84x', 
+                          'FireEyeNX_912_915', 'FireEyeNX_900_911', 'FireEyeNX_83x' 
+                          'FireEyeEX_912_915', 'FireEyeEX_900_911', 'FireEyeEX_82x_84x', 
+                          'CarbonBlack', 'Tanium', 'Tenable', 'GRR', 'osquery']
     DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
     DEFAULT_OUTPUT_FILE = 'valhalla-rules.yar'
 

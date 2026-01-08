@@ -3,19 +3,58 @@ from packaging import version
 
 # Product Requirements
 PRODUCT_REQUIREMENTS = {
-    "FireEyeAX": {
-        "maximum_version": "3.4.0",
+    "FireEyeAX_83x_84x": {
+        "maximum_version": "3.8.0",
         "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
         "with_crypto": True,  # assumption
     },
-    "FireEyeNX": {
-        "maximum_version": "3.4.0",
+    "FireEyeAX_900_911": {
+        "maximum_version": "3.11.0",
         "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
         "with_crypto": True,  # assumption
     },
-    "FireEyeEX": {
-        "maximum_version": "1.7.0",
+    "FireEyeAX_912_915": {
+        "maximum_version": "4.1.0",
         "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
+        "with_crypto": True,  # assumption
+    },
+    "FireEyeNX_83x": {
+        "maximum_version": "3.8.0",
+        "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
+        "with_crypto": True,  # assumption
+    },
+    "FireEyeNX_900_911": {
+        "maximum_version": "3.11.0",
+        "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
+        "with_crypto": True,  # assumption
+    },
+    "FireEyeNX_912_915": {
+        "maximum_version": "4.1.0",
+        "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
+        "with_crypto": True,  # assumption
+    },
+    "FireEyeEX_82x_84x": {
+        "maximum_version": "3.8.0",
+        "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
+        "with_crypto": False,  # assumption
+    },
+    "FireEyeEX_900_911": {
+        "maximum_version": "3.11.0",
+        "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
+        "with_crypto": False,  # assumption
+    },
+    "FireEyeEX_912_915": {
+        "maximum_version": "4.1.0",
+        "supported_modules": [],  # assumption
+        "reference": "https://thrive.trellix.com/s/article/000001974",
         "with_crypto": False,  # assumption
     },
     "CarbonBlack": {
@@ -35,12 +74,6 @@ PRODUCT_REQUIREMENTS = {
         "reference": "https://community.tenable.com/s/article/Supported-Yara-Checks",
         "with_crypto": False,
     },
-    "SymantecMAA": {
-        "maximum_version": "2.1.0",
-        "supported_modules": [],  # assumption
-        "reference": "https://twitter.com/RedSecSecurity/status/1103599203459129344",
-        "with_crypto": False,   # assumption
-    },
     "GRR": {
         "maximum_version": "3.6.3",
         "supported_modules": [],  # assumption
@@ -53,20 +86,8 @@ PRODUCT_REQUIREMENTS = {
         "reference": "https://github.com/osql/osql/issues/11",
         "with_crypto": True,  # https://github.com/facebook/osquery/blob/experimental/tools/provision/formula/yara.rb
     },
-    "McAfeeATD3": {
-        "maximum_version": "3.0",
-        "supported_modules": ["pe", "elf", "math"],  # assumption
-        "reference": "https://docs.mcafee.com/exports/pdf/jobs/download/pdf/238025",
-        "with_crypto": True,
-    },
-    "McAfeeATD4": {
-        "maximum_version": "3.0",  # until we know exactly which version is supported
-        "supported_modules": ["pe", "elf", "math"],  # assumption
-        "reference": "https://docs.mcafee.com/exports/pdf/jobs/download/pdf/238025",
-        "with_crypto": True,
-    },
     "DummyTest": {
-        "maximum_version": "1.7.0",
+        "maximum_version": "3.5.0",
         "supported_modules": [],
         "with_crypto": True,
     },
