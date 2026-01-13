@@ -11,7 +11,7 @@ setuptools.setup(
     description="Valhalla API Client",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/nextron/valhallaAPI",
+    url="https://github.com/NextronSystems/valhallaAPI",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
