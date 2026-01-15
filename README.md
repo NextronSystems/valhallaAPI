@@ -40,11 +40,6 @@ There is a demo API key that can be used for testing purposes.
 
 It will allow you to retrieve the processed public [signature-base](https://github.com/Neo23x0/signature-base) YARA and [SigmaHQ](https://github.com/SigmaHQ/sigma) Sigma rule sets.
 
-The key will also allow you to query the rule info for a single rule, which is:
-```
-Casing_Anomaly_ByPass
-```
-
 Please note that Valhalla has protection mechanisms in place that will block your end of the Bifrost for a significant amount of time if you try foolish things.  
 
 ## Getting Started

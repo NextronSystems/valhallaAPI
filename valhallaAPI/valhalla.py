@@ -232,27 +232,28 @@ class ValhallaAPI(object):
         rules_response = json.loads(r.text)
 
         # Filter ------------------------------------------------------
-        # Product filtering
-        if product:
-            (max_version, modules, with_crypto) = get_product_requirements(product=product)
-        # Tag filtering
-        if len(tags) > 0:
-            rules_response['rules'] = filter_tags(rules_response['rules'], tags=tags)
-        # Score
-        if score > 0:
-            rules_response['rules'] = filter_score(rules_response['rules'], minimum_score=score)
-        # Search string
-        if search:
-            rules_response['rules'] = filter_search(rules_response['rules'], query=search)
-        # Custom filtering
-        if max_version or len(modules) > 0 or with_crypto is not True:
-            rules_response['rules'] = filter_requirements(rules_response['rules'],
-                                                          sup_ver_string=max_version,
-                                                          sup_modules=modules,
-                                                          with_crypto=with_crypto)
-        # Public rules filter
-        if private_only:
-            rules_response['rules'] = filter_privateonly(rules_response['rules'])
+        if 'rules' in rules_response:
+            # Product filtering
+            if product:
+                (max_version, modules, with_crypto) = get_product_requirements(product=product)
+            # Tag filtering
+            if len(tags) > 0:
+                rules_response['rules'] = filter_tags(rules_response['rules'], tags=tags)
+            # Score
+            if score > 0:
+                rules_response['rules'] = filter_score(rules_response['rules'], minimum_score=score)
+            # Search string
+            if search:
+                rules_response['rules'] = filter_search(rules_response['rules'], query=search)
+            # Custom filtering
+            if max_version or len(modules) > 0 or with_crypto is not True:
+                rules_response['rules'] = filter_requirements(rules_response['rules'],
+                                                            sup_ver_string=max_version,
+                                                            sup_modules=modules,
+                                                            with_crypto=with_crypto)
+            # Public rules filter
+            if private_only:
+                rules_response['rules'] = filter_privateonly(rules_response['rules'])
 
         # Return filtered set
         return rules_response
