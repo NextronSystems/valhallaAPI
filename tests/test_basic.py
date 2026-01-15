@@ -82,8 +82,8 @@ def test_demo_rules_custom_limited():
     :return:
     """
     v = ValhallaAPI(api_key=DEMO_KEY)
-    rules_response1 = v.get_rules_json(modules=['pe'])
-    rules_response2 = v.get_rules_json(modules=['pe'], with_crypto=False)
+    rules_response1 = v.get_rules_json(max_version="3.5.0", modules=['pe'])
+    rules_response2 = v.get_rules_json(max_version="3.5.0", modules=['pe'], with_crypto=False)
     assert len(rules_response1['rules']) > 0
     assert len(rules_response2['rules']) > 0
     assert len(rules_response2['rules']) < len(rules_response1['rules'])
