@@ -19,9 +19,10 @@ The module provides functions to filter the retrieved rules based on
 - tags
 - score (YARA only)
 - keywords
-- supported YARA version and required YARA modules
+- supported YARA version (at least 3.5.0)
+- required YARA modules
 
-It also allows you to retrieve a filtered rule set that fits the product that you use to apply the rules. For example, you can get a filtered rule set with rules that will run on your `FireEyeEX` appliance by filtering all rules that use feature only available in YARA versions higher than the supported `1.7.0`. 
+It also allows you to retrieve a filtered rule set that fits the product that you use to apply the rules. For example, you can get a filtered rule set with rules that will run on your `FireEye EX 9.x` appliance by filtering all rules that use feature only available in YARA versions higher than the supported `3.11.0`. 
 
 There are 2 extra functions for special lookups in the Valhalla database (for customers only):
 
@@ -121,10 +122,19 @@ response = v.get_rules_text(product="FireEyeEX")
 
 The following products have predefined presets
 ```python
-    FIREEYEAX = "FireEyeAX"
-    FIREEYENX = "FireEyeNX"
-    FIREEYEEX = "FireEyeEX"
+    FIREEYEAX_912_915 = "FireEyeAX_912_915"
+    FIREEYEAX_900_911 = "FireEyeAX_900_911"
+    FIREEYEAX_83x_84x = "FireEyeAX_83x_84x"
+    FIREEYENX_912_915 = "FireEyeNX_912_915"
+    FIREEYENX_900_911 = "FireEyeNX_900_911"
+    FIREEYENX_83x = "FireEyeNX_83x"
+    FIREEYEEX_912_915 = "FireEyeEX_912_915"
+    FIREEYEEX_900_911 = "FireEyeEX_900_911"
+    FIREEYEEX_82x_84x = "FireEyeEX_82x_84x"
     CARBONBLACK = "CarbonBlack"
+    TANIUM = "Tanium"
+    TENABLE = "Tenable"
+    GRR = "GRR"
 ```
 
 An example response will look like
@@ -148,7 +158,7 @@ rule SUSP_Katz_PDB_RID664 : EXE SUSP DEMO FILE {
       score = 70
       customer = "demo"
       copyright = "Distribution to third parties is not permitted and will be pursued with legal measurements" 
-      minimum_yara = "1.7"
+      minimum_yara = "3.5.0"
       
    strings:
       $s1 = /\\Release\\[a-z]{0,8}katz.pdb/ 
@@ -184,10 +194,10 @@ An example response will look like
   "rules": [
     {
       "author": "Florian Roth", 
-      "content": "rule EXP_Libre_Office_CVE_2018_16858_RIDBA9 : EXPLOIT OFFICE DEMO FILE APT {\n   meta:\n      description = \"Detects exploits addressing CVE-2018-16858 in LibreOffice - modified version\"\n      author = \"Florian Roth\"\n      reference = \"https://insert-script.blogspot.com/2019/02/libreoffice-cve-2018-16858-remote-code.html\"\n      date = \"2019-02-05 14:17:21\"\n      score = 70\n      customer = \"demo\"\n      copyright = \"Distribution to third parties is not permitted and will be pursued with legal measurements\" \n      minimum_yara = \"1.7\"\n      \n   strings:\n      $x1 = \"&#x74;&#x65;&#x6d;&#x70;&#x66;&#x69;&#x6c;&#x65;&#x70;&#x61;&#x67;&#x65;&#x72\" \n      $x2 = \"&#116;&#101;&#109;&#112;&#102;&#105;&#108;&#101;&#112;&#97;&#103;&#101;&#114;\" \n      $s1 = \"xlink:href=\\\"vnd.sun.star.script:\" ascii nocase\n      $s2 = \".py$tempfilepager\" ascii nocase\n      $s3 = \"language=Python\" ascii nocase\n   condition: \n      uint32be ( 0 ) == 0x3c3f786d and all of them or 1 of ( $x* )\n}", 
+      "content": "rule EXP_Libre_Office_CVE_2018_16858_RIDBA9 : EXPLOIT OFFICE DEMO FILE APT {\n   meta:\n      description = \"Detects exploits addressing CVE-2018-16858 in LibreOffice - modified version\"\n      author = \"Florian Roth\"\n      reference = \"https://insert-script.blogspot.com/2019/02/libreoffice-cve-2018-16858-remote-code.html\"\n      date = \"2019-02-05 14:17:21\"\n      score = 70\n      customer = \"demo\"\n      copyright = \"Distribution to third parties is not permitted and will be pursued with legal measurements\" \n      minimum_yara = \"3.5.0\"\n      \n   strings:\n      $x1 = \"&#x74;&#x65;&#x6d;&#x70;&#x66;&#x69;&#x6c;&#x65;&#x70;&#x61;&#x67;&#x65;&#x72\" \n      $x2 = \"&#116;&#101;&#109;&#112;&#102;&#105;&#108;&#101;&#112;&#97;&#103;&#101;&#114;\" \n      $s1 = \"xlink:href=\\\"vnd.sun.star.script:\" ascii nocase\n      $s2 = \".py$tempfilepager\" ascii nocase\n      $s3 = \"language=Python\" ascii nocase\n   condition: \n      uint32be ( 0 ) == 0x3c3f786d and all of them or 1 of ( $x* )\n}", 
       "date": "2019-02-05 12:54:31", 
       "description": "Detects exploits addressing CVE-2018-16858 in LibreOffice - modified version", 
-      "minimum_yara": "1.7", 
+      "minimum_yara": "3.5.0", 
       "name": "EXP_Libre_Office_CVE_2018_16858_RID9B8", 
       "reference": "https://insert-script.blogspot.com/2019/02/libreoffice-cve-2018-16858-remote-code.html", 
       "required_modules": [], 
@@ -228,7 +238,7 @@ An example output of a rule info request will look like
   }, 
   "date": "2019-01-17 11:50:21", 
   "description": "Detects suspicious casing of bypass statement", 
-  "minimum_yara": "1.7", 
+  "minimum_yara": "3.5.0", 
   "name": "Casing_Anomaly_ByPass_RID837", 
   "reference": "Internal Research", 
   "required_modules": [], 
@@ -471,7 +481,7 @@ Proxy:
 
 =======================================================================
 Filter:
-  -fp product           filter product (valid products are: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable, SymantecMAA, osquery, GRR, McAfeeATD3, McAfeeATD4)
+  -fp product           filter product (valid products are: FireEyeAX_912_915, FireEyeAX_900_911, FireEyeAX_83x_84x, FireEyeNX_912_915, FireEyeNX_900_911, FireEyeNX_83x, FireEyeEX_912_915, FireEyeEX_900_911, FireEyeEX_82x_84x, CarbonBlack, Tanium, Tenable, GRR, osquery)
   -fv yara-version      get rules that support the given YARA version and lower
   -fm modules [modules ...]
                         set a list of modules that your product supports (e.g. "-fm pe hash") (setting no modules means that all modules are supported by your product)
@@ -528,7 +538,7 @@ valhalla-cli -k YOUR-API-KEY -fq Mimikatz -o mimikatz-rules.yar
 
 Get a set of rules with the highest compatibility (lowest requirements) using the demo API key
 ```bash
-valhalla-cli -fv 1.7
+valhalla-cli -fv 3.5.0
 ```
 
 Get list of rules for the keyword `Turla`
@@ -634,7 +644,7 @@ It will return a JSON structure.
     },
     "date": "2019-01-17 11:50:21",
     "description": "Detects suspicious casing of bypass statement",
-    "minimum_yara": "1.7",
+    "minimum_yara": "3.5.0",
     "name": "Casing_Anomaly_ByPass_RID2F47",
     "reference": "Internal Research",
     "required_modules": [],

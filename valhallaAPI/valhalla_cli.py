@@ -2,7 +2,7 @@
 # Valhalla API command line client
 # Florian Roth, 2020
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 import sys
 import os
@@ -12,6 +12,7 @@ import platform
 import json
 import configparser
 from pathlib import Path
+from packaging import version
 from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError, ApiError
 
 
@@ -44,7 +45,7 @@ def main():
                               metavar='product', default='')
     group_filter.add_argument('-fpo', help='only return rules that are not part of the public feed',
                               action='store_true', default=False)
-    group_filter.add_argument('-fv', help='get rules that support the given YARA version and lower',
+    group_filter.add_argument('-fv', help='get rules that support the given YARA version and lower (at least 3.5.0)',
                               metavar='yara-version', default='')
     group_filter.add_argument('-fm', help='set a list of modules that your product supports (e.g. "-fm pe hash") '
                                           '(setting no modules means that all modules are supported by your product)',
@@ -113,6 +114,16 @@ def main():
     if apikey == ValhallaAPI.DEMO_KEY:
         Log.warning("You are using the DEMO API key and will only retrieve the reduced open source signature set")
         Log.warning("Set your private API key with '-k APIKEY' to get the rule sets that your have subscribed")
+
+    # Check YARA version
+    if args.fv:
+        try:
+            if version.parse(args.fv) < version.Version("3.5.0"):
+                Log.warning("Valhalla rules require at least YARA version 3.5.0")
+                sys.exit(1)
+        except version.InvalidVersion:
+            Log.warning("YARA version format is invalid")
+            sys.exit(1)
 
     # Create the ValhallaAPI object
     v = ValhallaAPI(api_key=apikey)

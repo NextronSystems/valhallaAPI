@@ -4,14 +4,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="valhallaAPI",
-    version="0.6.0",
+    name="valhallaapi",
+    version="0.6.2",
     author="Nextron",
     author_email="florian.roth@nextron-systems.com",
     description="Valhalla API Client",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/nextron/valhallaAPI",
+    url="https://github.com/NextronSystems/valhallaAPI",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
