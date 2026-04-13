@@ -5,7 +5,7 @@ from datetime import datetime
 YARA_SET_HEADER = """/*
     VALHALLA YARA RULE SET
     Retrieved: {{ date }}
-    Generated for User: {{ user }}
+    Generated for user: {{ user }}
     Number of Rules: {{ len_rules }}
     
     {{ legal_note }}
@@ -37,4 +37,3 @@ def generate_header(rules_response):
     for module in required_modules:
         header_elements.append('import "{0}"'.format(module))
     return "\n".join(header_elements)
-

@@ -3,9 +3,13 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+version = {}
+with open("valhallaAPI/version.py", "r") as fh:
+    exec(fh.read(), version)
+
 setuptools.setup(
     name="valhallaapi",
-    version="0.6.2",
+    version=version["__version__"],
     author="Nextron",
     author_email="florian.roth@nextron-systems.com",
     description="Valhalla API Client",

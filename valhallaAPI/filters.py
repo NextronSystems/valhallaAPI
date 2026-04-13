@@ -124,7 +124,7 @@ def get_product_requirements(product):
     """
     # Product requirements
     if product not in PRODUCT_REQUIREMENTS:
-        raise UnknownProductError("product name '%s' is not in the predefined list: %s" %
+        raise UnknownProductError("Product name '%s' is not in the predefined list: %s" %
                                   (product, ", ".join(PRODUCT_REQUIREMENTS)))
     # Get the values from the dict
     sup_version = PRODUCT_REQUIREMENTS[product]['maximum_version']

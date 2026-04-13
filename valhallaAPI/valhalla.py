@@ -7,8 +7,6 @@
 #
 # Designed to work with API version 1
 
-__version__ = "0.6.1"
-
 import io
 import json
 import requests
@@ -17,6 +15,7 @@ import zipfile
 from urllib.parse import urlparse
 from .filters import *
 from .helper import generate_header
+from .version import __version__
 # from requests.auth import HTTPProxyAuth  # not yet used
 
 
@@ -255,6 +254,10 @@ class ValhallaAPI(object):
             if private_only:
                 rules_response['rules'] = filter_privateonly(rules_response['rules'])
 
+            self.last_retrieved_rules_count = len(rules_response['rules'])
+        else:
+            self.last_retrieved_rules_count = 0
+
         # Return filtered set
         return rules_response
 
@@ -288,9 +291,6 @@ class ValhallaAPI(object):
         # Generate header
         response_elements.append(generate_header(rules_response))
 
-        # Save the number of retrieved rules
-        self.last_retrieved_rules_count = len(rules_response['rules'])
-
         # Rules
         for rule in rules_response['rules']:
             response_elements.append(rule['content'])
@@ -317,6 +317,12 @@ class ValhallaAPI(object):
             rules_response['rules'] = filter_search(rules_response['rules'], query=search)
         if private_only:
             rules_response['rules'] = filter_privateonly(rules_response['rules'])
+
+        if 'rules' in rules_response:
+            self.last_retrieved_rules_count = len(rules_response['rules'])
+        else:
+            self.last_retrieved_rules_count = 0
+
         # Return filtered set
         return rules_response
 
