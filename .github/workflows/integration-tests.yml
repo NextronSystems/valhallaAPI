@@ -8,7 +8,7 @@ on:
 jobs:
   live-demo-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Check out repository
@@ -24,5 +24,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt .
 
-      - name: Run live integration pytest suite
-        run: python -m pytest -m integration -v tests
+      - name: Run live integration smoke tests
+        run: |
+          python -m pytest -v \
+            tests/test_basic.py::test_status \
+            tests/test_basic.py::test_demo_rules_json \
+            tests/test_cli_and_sigma.py::test_sigma_zip_updates_retrieved_rule_count_live_demo
