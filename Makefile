@@ -1,4 +1,4 @@
-.PHONY: help prepare-dev test lint release release-test
+.PHONY: help prepare-dev test test-integration lint release release-test
 
 VENV_NAME?=venv
 VENV_ACTIVATE=. $(VENV_NAME)/bin/activate
@@ -8,7 +8,9 @@ help:
 	@echo "make prepare-dev"
 	@echo "       prepare development environment, use only once"
 	@echo "make test"
-	@echo "       run tests"
+	@echo "       run offline tests"
+	@echo "make test-integration"
+	@echo "       run live integration tests"
 	@echo "make lint"
 	@echo "       run pylint and mypy"
 
@@ -27,6 +29,9 @@ $(VENV_NAME)/bin/activate: setup.py
 
 test: venv
 	${PYTHON} -m pytest -v
+
+test-integration: venv
+	${PYTHON} -m pytest -m integration -v
 
 release:
 	rm -rf ./dist/*
@@ -47,7 +52,6 @@ release-test:
 lint: venv
 	${PYTHON} -m pylint
 	${PYTHON} -m mypy
-
 
 
 

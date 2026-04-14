@@ -26,7 +26,7 @@ jobs:
 
       - name: Run live integration smoke tests
         run: |
-          python -m pytest -v \
+          python -m pytest -m integration -v \
             tests/test_basic.py::test_status \
             tests/test_basic.py::test_demo_rules_json \
             tests/test_cli_and_sigma.py::test_sigma_zip_updates_retrieved_rule_count_live_demo

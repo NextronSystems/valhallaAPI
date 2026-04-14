@@ -7,7 +7,7 @@ import pytest
 
 import valhallaAPI.valhalla as valhalla_module
 import valhallaAPI.valhalla_cli as valhalla_cli
-from valhallaAPI.valhalla import ValhallaAPI
+from valhallaAPI.valhalla import ValhallaAPI, ApiError
 from valhallaAPI.version import __version__
 
 DEMO_KEY = ValhallaAPI.DEMO_KEY
@@ -73,6 +73,44 @@ def test_sigma_zip_updates_retrieved_rule_count(monkeypatch):
         "sigma/NetworkConnection/second.yml",
         "sigma/ProcessCreation/first.yml",
     ]
+
+
+def test_sigma_json_error_response_does_not_keyerror(monkeypatch):
+    def fake_post(url, data=None, proxies=None, headers=None):
+        assert url.endswith("/getsigma")
+        return MockResponse(
+            {
+                "status": "error",
+                "message": "demo failure",
+            }
+        )
+
+    monkeypatch.setattr(valhalla_module.requests, "post", fake_post)
+    v = ValhallaAPI(api_key=DEMO_KEY)
+
+    response = v.get_sigma_rules_json(search="suspicious", private_only=True)
+
+    assert response["status"] == "error"
+    assert v.last_retrieved_rules_count == 0
+
+
+def test_sigma_zip_raises_api_error_on_error_response(monkeypatch):
+    def fake_post(url, data=None, proxies=None, headers=None):
+        assert url.endswith("/getsigma")
+        return MockResponse(
+            {
+                "status": "error",
+                "message": "demo failure",
+            }
+        )
+
+    monkeypatch.setattr(valhalla_module.requests, "post", fake_post)
+    v = ValhallaAPI(api_key=DEMO_KEY)
+
+    with pytest.raises(ApiError) as exc:
+        v.get_sigma_rules_zip(search="suspicious", private_only=True)
+
+    assert exc.value.message == "demo failure"
 
 
 @pytest.mark.integration

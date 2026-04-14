@@ -313,12 +313,11 @@ class ValhallaAPI(object):
         # Load JSON
         rules_response = json.loads(r.text)
 
-        if search:
-            rules_response['rules'] = filter_search(rules_response['rules'], query=search)
-        if private_only:
-            rules_response['rules'] = filter_privateonly(rules_response['rules'])
-
         if 'rules' in rules_response:
+            if search:
+                rules_response['rules'] = filter_search(rules_response['rules'], query=search)
+            if private_only:
+                rules_response['rules'] = filter_privateonly(rules_response['rules'])
             self.last_retrieved_rules_count = len(rules_response['rules'])
         else:
             self.last_retrieved_rules_count = 0
@@ -332,6 +331,12 @@ class ValhallaAPI(object):
         :return:
         """
         rules_response = self.get_sigma_rules_json(search, private_only)
+
+        if 'status' in rules_response:
+            if rules_response['status'] == "error":
+                raise ApiError(rules_response['message'])
+        if 'rules' not in rules_response:
+            raise ApiError("Unexpected response from Valhalla API")
         
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(file=zip_buffer, mode='w') as zip_file:
