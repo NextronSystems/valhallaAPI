@@ -317,6 +317,12 @@ class ValhallaAPI(object):
             rules_response['rules'] = filter_search(rules_response['rules'], query=search)
         if private_only:
             rules_response['rules'] = filter_privateonly(rules_response['rules'])
+
+        if 'rules' in rules_response:
+            self.last_retrieved_rules_count = len(rules_response['rules'])
+        else:
+            self.last_retrieved_rules_count = 0
+
         # Return filtered set
         return rules_response
 
@@ -326,6 +332,10 @@ class ValhallaAPI(object):
         :return:
         """
         rules_response = self.get_sigma_rules_json(search, private_only)
+
+        if 'status' in rules_response:
+            if rules_response['status'] == "error":
+                raise ApiError(rules_response['message'])
         
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(file=zip_buffer, mode='w') as zip_file:

@@ -15,6 +15,54 @@ from pathlib import Path
 from packaging import version
 from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError, ApiError
 
+YARA_FEED = "yara"
+SIGMA_FEED = "sigma"
+
+
+def resolve_rule_feed(args, logger):
+    if args.sigma and args.feed == YARA_FEED:
+        logger.warning("Ignoring --feed yara because --sigma/-s was also set")
+    if args.sigma:
+        return SIGMA_FEED
+    if args.feed:
+        return args.feed
+    return YARA_FEED
+
+
+def get_feed_guidance(rule_feed):
+    if rule_feed == SIGMA_FEED:
+        return "Current rule feed selection: Sigma (--feed sigma or --sigma/-s)."
+    return "YARA is the default rule feed; use --feed sigma or --sigma/-s to retrieve Sigma rules."
+
+
+def get_feed_error_message(message, rule_feed):
+    if "no rule feed access" not in message.lower():
+        return message
+
+    if rule_feed == SIGMA_FEED:
+        hint = " This request targets the Sigma feed. If your account only has YARA access, rerun without --sigma/-s or use --feed yara."
+    else:
+        hint = " This request targets the YARA feed. If your account has Sigma access, rerun with --feed sigma or --sigma/-s."
+
+    return "%s%s" % (message, hint)
+
+
+def get_ignored_sigma_flags(args):
+    ignored = []
+    if args.fp:
+        ignored.append("-fp")
+    if args.fv:
+        ignored.append("-fv")
+    if args.fm:
+        ignored.append("-fm")
+    if args.ft:
+        ignored.append("-ft")
+    if str(args.fs) != "0":
+        ignored.append("-fs")
+    if args.nocrypto is False:
+        ignored.append("--nocrypto")
+    return ignored
+
 
 def main():
     """
@@ -28,9 +76,12 @@ def main():
                         default=os.path.join(str(Path.home()), ".valhalla"))
     parser.add_argument('-o', help='output file', metavar='output-file', default=ValhallaAPI.DEFAULT_OUTPUT_FILE)
     parser.add_argument('--check', action='store_true', default=False,
-                        help='Check subscription info and total rule count')
+                        help='Check account status and subscription details')
     parser.add_argument('--debug', action='store_true', default=False, help='Debug output')
-    parser.add_argument('-s', action='store_true', default=False, help='Load Sigma rules')
+    parser.add_argument('--feed', choices=[YARA_FEED, SIGMA_FEED], default=None,
+                        help='select rule feed: yara (default) or sigma')
+    parser.add_argument('-s', '--sigma', dest='sigma', action='store_true', default=False,
+                        help='retrieve Sigma rules (shortcut for --feed sigma)')
 
     group_proxy = parser.add_argument_group(
         '=======================================================================\nProxy')
@@ -90,6 +141,7 @@ def main():
     logFormatterRemote = logging.Formatter("{0} [%(levelname)-5.5s] %(message)s".format(platform.uname()[1]))
     Log = logging.getLogger(__name__)
     Log.setLevel(logging.INFO)
+    Log.handlers.clear()
     # Console Handler
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(logFormatter)
@@ -127,6 +179,7 @@ def main():
 
     # Create the ValhallaAPI object
     v = ValhallaAPI(api_key=apikey)
+    rule_feed = resolve_rule_feed(args, Log)
 
     # Subscription check
     if args.check:
@@ -134,6 +187,7 @@ def main():
         if 'active' in status:
             if status['active']:
                 Log.info("Account is active: %s" % status)
+                Log.info("The account check confirms the API key status. %s" % get_feed_guidance(rule_feed))
                 sys.exit(0)
             else:
                 Log.error("Account is inactive: %s" % status)
@@ -162,7 +216,7 @@ def main():
     if args.lr or args.lh or args.lk or args.lkm:
         # Rule Lookup
         if args.lr != "":
-            if args.s:
+            if rule_feed == SIGMA_FEED:
                 r = v.get_sigma_rule_info(args.lr)
             else:
                 r = v.get_rule_info(args.lr)
@@ -186,25 +240,35 @@ def main():
         sys.exit(0)
 
     # Score warning
-    if args.fs == 0:
+    if rule_feed == YARA_FEED and args.fs == 0:
         Log.warning("Note that an unfiltered set (-fs 0) contains low scoring rules used for threat hunting purposes")
 
     # Info output
-    Log.info("Retrieving rules with params PRODUCT: %s MAX_VERSION: %s MODULES: %s WITH_CRYPTO: %s TAGS: %s "
-             "SCORE: %s PRIVATE_ONLY: %s QUERY: %s" % (
-                 args.fp,
-                 args.fv,
-                 ", ".join(modules),
-                 str(args.nocrypto),
-                 ", ".join(tags),
-                 str(args.fs),
-                 str(args.fpo),
-                 args.fq
-             ))
+    Log.info("Selected rule feed: %s" % rule_feed.upper())
+    if rule_feed == SIGMA_FEED:
+        ignored_flags = get_ignored_sigma_flags(args)
+        if ignored_flags:
+            Log.warning("Ignoring YARA-only flags for Sigma retrieval: %s" % ", ".join(ignored_flags))
+        Log.info("Retrieving Sigma rules with params PRIVATE_ONLY: %s QUERY: %s" % (
+            str(args.fpo),
+            args.fq
+        ))
+    else:
+        Log.info("Retrieving YARA rules with params PRODUCT: %s MAX_VERSION: %s MODULES: %s WITH_CRYPTO: %s TAGS: %s "
+                 "SCORE: %s PRIVATE_ONLY: %s QUERY: %s" % (
+                     args.fp,
+                     args.fv,
+                     ", ".join(modules),
+                     str(args.nocrypto),
+                     ", ".join(tags),
+                     str(args.fs),
+                     str(args.fpo),
+                     args.fq
+                 ))
 
     # Retrieve rules
     try:
-        if args.s:
+        if rule_feed == SIGMA_FEED:
             response = v.get_sigma_rules_zip(
                 search=args.fq,
                 private_only=args.fpo,
@@ -224,7 +288,7 @@ def main():
         Log.error("Unknown product identifier - please use one of these: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
         sys.exit(1)
     except ApiError as e:
-        Log.error(e.message)
+        Log.error(get_feed_error_message(e.message, rule_feed))
         sys.exit(1)
 
     # Response information
@@ -235,11 +299,11 @@ def main():
     # Tanium accepts only the ".yara" extension for imports
     if args.fp == "Tanium" and output_file == ValhallaAPI.DEFAULT_OUTPUT_FILE:
         output_file = "valhalla-rules.yara"
-    if args.s and output_file == ValhallaAPI.DEFAULT_OUTPUT_FILE:
+    if rule_feed == SIGMA_FEED and output_file == ValhallaAPI.DEFAULT_OUTPUT_FILE:
         output_file = "valhalla-rules.zip"
     # Write to the output file
     Log.info("Writing retrieved rules into: %s" % output_file)
-    if args.s:
+    if rule_feed == SIGMA_FEED:
         with open(output_file, 'wb') as fh:
             fh.write(response)
     else:

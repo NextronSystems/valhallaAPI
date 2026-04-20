@@ -459,8 +459,14 @@ or just download the precompiled `valhalla-cli.exe` from the latest release in t
 ## Usage
 
 ```
-usage: valhalla-cli [-h] [-k apikey] [-c config-file] [-o output-file] [--check] [--debug] [-p proxy-url] [-pu proxy-user] [-pp proxy-pass] [-fp product] [-fv yara-version] [-fm modules [modules ...]]
-                    [-ft tags [tags ...]] [-fs score] [-fq query] [--nocrypto] [-lr lookup-rule] [-lh lookup-hash] [-lk lookup-keyword] [-lkm lookup-keyword] [-lo lookup-output]
+usage: valhalla-cli [-h] [-k apikey] [-c config-file] [-o output-file]
+                    [--check] [--debug] [--feed {yara,sigma}] [-s]
+                    [-p proxy-url] [-pu proxy-user] [-pp proxy-pass]
+                    [-fp product] [-fpo] [-fv yara-version]
+                    [-fm modules [modules ...]] [-ft tags [tags ...]]
+                    [-fs score] [-fq query] [--nocrypto] [-lr lookup-rule]
+                    [-lh lookup-hash] [-lk lookup-keyword]
+                    [-lkm lookup-keyword] [-lo lookup-output]
 
 Valhalla-CLI
 
@@ -469,9 +475,10 @@ optional arguments:
   -k apikey             API KEY
   -c config-file        Config file (see README for details)
   -o output-file        output file
-  -s                    Load sigma rules
-  --check               Check subscription info and total rule count
+  --check               Check account status and subscription details
   --debug               Debug output
+  --feed {yara,sigma}   select rule feed: yara (default) or sigma
+  -s, --sigma           retrieve Sigma rules (shortcut for --feed sigma)
 
 =======================================================================
 Proxy:
@@ -511,6 +518,8 @@ Check the status of your subscription
 valhalla-cli -k YOUR-API-KEY --check
 ```
 
+The default rule feed is YARA. If you want to retrieve Sigma rules, use `--feed sigma` or `--sigma` (the legacy `-s` flag still works).
+
 Get all subscribed rules and save them to `valhalla-rules.yar`
 ```bash
 valhalla-cli -k YOUR-API-KEY
@@ -518,7 +527,7 @@ valhalla-cli -k YOUR-API-KEY
 
 Get all sigma rules and save them to `valhalla-rules.zip`
 ```bash
-valhalla-cli -k YOUR-API-KEY -s
+valhalla-cli -k YOUR-API-KEY --sigma
 ```
 
 Get rules with score higher than 75 and save them to `valhalla-rules.yar`
@@ -674,10 +683,10 @@ It will return a JSON structure.
 }
 ````
 
-To query sigma rules, add `-s`:
+To query Sigma rules, add `--sigma` (or keep using `-s`):
 
 ```bash
-./valhalla-cli -s -lr 06d71506-7beb-4f22-8888-e2e5e2ca7fd8
+./valhalla-cli --sigma -lr 06d71506-7beb-4f22-8888-e2e5e2ca7fd8
 ```
 
 # Scores
