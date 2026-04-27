@@ -72,7 +72,7 @@ def test_cli_feed_sigma_retrieves_sigma_rules(monkeypatch, capsys, tmp_path):
 
     assert output_file.read_bytes() == b"zip-bytes"
     assert "Selected rule feed: SIGMA" in captured.err
-    assert "Retrieving Sigma rules with params" in captured.err
+    assert "Retrieving Sigma rules with parameters" in captured.err
 
 
 def test_cli_yara_feed_access_error_suggests_sigma(monkeypatch, capsys):

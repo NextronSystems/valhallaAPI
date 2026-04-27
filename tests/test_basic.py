@@ -4,6 +4,8 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 from valhallaAPI.valhalla import ValhallaAPI
 
+pytestmark = pytest.mark.integration
+
 DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
 INVALID_KEY = "invalid"
 RULES_TEXT = "VALHALLA YARA RULE SET"

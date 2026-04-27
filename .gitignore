@@ -1,7 +1,7 @@
 venv
 valhallaAPI.egg*
 dist
-valhalla-rules.yar
 build
 *.yar
 *.yara
+*.zip

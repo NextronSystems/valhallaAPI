@@ -2,8 +2,6 @@
 # Valhalla API command line client
 # Florian Roth, 2020
 
-__version__ = "0.6.1"
-
 import sys
 import os
 import argparse
@@ -13,6 +11,7 @@ import json
 import configparser
 from pathlib import Path
 from packaging import version
+from valhallaAPI.version import __version__
 from valhallaAPI.valhalla import ValhallaAPI, UnknownProductError, ApiError
 
 YARA_FEED = "yara"
@@ -149,23 +148,23 @@ def main():
 
     # API Key
     apikey = args.k
-    Log.info("Trying to read Valhalla config file at '%s' (set manually with -c)" % args.c)
+    Log.info("Trying to read the Valhalla config file at '%s' (override with -c)" % args.c)
     if os.path.exists(args.c):
         Log.debug("Config file found at '%s'" % args.c)
         config = configparser.ConfigParser()
         config.read(args.c)
         if 'DEFAULT' not in config:
-            Log.error("section [DEFAULT] missing in config file - skipping this config")
+            Log.error("Section [DEFAULT] is missing from the config file; skipping it")
         else:
             apikey = config['DEFAULT']['APIKEY']
             Log.info("Successfully read config file")
     else:
-        Log.info("No config file found, will rely on API KEY passed via cmd line arguments (-k)")
+        Log.info("No config file found; using the API key passed on the command line (-k)")
 
     # Check key
     if apikey == ValhallaAPI.DEMO_KEY:
-        Log.warning("You are using the DEMO API key and will only retrieve the reduced open source signature set")
-        Log.warning("Set your private API key with '-k APIKEY' to get the rule sets that your have subscribed")
+        Log.warning("You are using the DEMO API key and will only retrieve the reduced open source rule set")
+        Log.warning("Use '-k APIKEY' with your private API key to retrieve the rule sets you are subscribed to")
 
     # Check YARA version
     if args.fv:
@@ -190,7 +189,7 @@ def main():
                 Log.info("The account check confirms the API key status. %s" % get_feed_guidance(rule_feed))
                 sys.exit(0)
             else:
-                Log.error("Account is inactive: %s" % status)
+                Log.error("Account is not active: %s" % status)
                 sys.exit(1)
         else:
             Log.error("Error: %s" % status['message'])
@@ -200,7 +199,7 @@ def main():
     if args.p:
         Log.info("Setting proxy URL: %s USER: %s PASS: (hidden)" % (args.p, args.pu))
         if args.p.startswith("http:"):
-            Log.warning("URL starts with http instead of https - you should use a TLS encrypted connection")
+            Log.warning("The proxy URL uses http instead of https; you should use a TLS-encrypted connection")
         v.set_proxy(args.p, args.pu, args.pp)
 
     # Default: Get all rules that the set API key is subscribed to
@@ -241,7 +240,7 @@ def main():
 
     # Score warning
     if rule_feed == YARA_FEED and args.fs == 0:
-        Log.warning("Note that an unfiltered set (-fs 0) contains low scoring rules used for threat hunting purposes")
+        Log.warning("An unfiltered set (-fs 0) includes low-scoring rules intended for threat hunting")
 
     # Info output
     Log.info("Selected rule feed: %s" % rule_feed.upper())
@@ -249,12 +248,12 @@ def main():
         ignored_flags = get_ignored_sigma_flags(args)
         if ignored_flags:
             Log.warning("Ignoring YARA-only flags for Sigma retrieval: %s" % ", ".join(ignored_flags))
-        Log.info("Retrieving Sigma rules with params PRIVATE_ONLY: %s QUERY: %s" % (
+        Log.info("Retrieving Sigma rules with parameters PRIVATE_ONLY: %s QUERY: %s" % (
             str(args.fpo),
             args.fq
         ))
     else:
-        Log.info("Retrieving YARA rules with params PRODUCT: %s MAX_VERSION: %s MODULES: %s WITH_CRYPTO: %s TAGS: %s "
+        Log.info("Retrieving YARA rules with parameters PRODUCT: %s MAX_VERSION: %s MODULES: %s WITH_CRYPTO: %s TAGS: %s "
                  "SCORE: %s PRIVATE_ONLY: %s QUERY: %s" % (
                      args.fp,
                      args.fv,
@@ -285,7 +284,7 @@ def main():
                 private_only=args.fpo,
             )
     except UnknownProductError as e:
-        Log.error("Unknown product identifier - please use one of these: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
+        Log.error("Unknown product identifier. Please use one of: %s", ", ".join(ValhallaAPI.PRODUCT_IDENTIFIER))
         sys.exit(1)
     except ApiError as e:
         Log.error(get_feed_error_message(e.message, rule_feed))
@@ -302,7 +301,7 @@ def main():
     if rule_feed == SIGMA_FEED and output_file == ValhallaAPI.DEFAULT_OUTPUT_FILE:
         output_file = "valhalla-rules.zip"
     # Write to the output file
-    Log.info("Writing retrieved rules into: %s" % output_file)
+    Log.info("Writing retrieved rules to: %s" % output_file)
     if rule_feed == SIGMA_FEED:
         with open(output_file, 'wb') as fh:
             fh.write(response)
