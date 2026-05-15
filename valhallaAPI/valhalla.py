@@ -46,10 +46,11 @@ class ValhallaAPI(object):
     GRR = "GRR"
     OSQUERY = "osquery"
 
-    PRODUCT_IDENTIFIER = ['FireEyeAX_912_915', 'FireEyeAX_900_911', 'FireEyeAX_83x_84x', 
-                          'FireEyeNX_912_915', 'FireEyeNX_900_911', 'FireEyeNX_83x' 
-                          'FireEyeEX_912_915', 'FireEyeEX_900_911', 'FireEyeEX_82x_84x', 
-                          'CarbonBlack', 'Tanium', 'Tenable', 'GRR', 'osquery']
+    # Derive the public product identifiers from the filter presets so CLI help
+    # and validation cannot drift from PRODUCT_REQUIREMENTS.
+    PRODUCT_IDENTIFIER = [
+        product for product in get_product_templates() if product != "DummyTest"
+    ]
     DEMO_KEY = "1111111111111111111111111111111111111111111111111111111111111111"
     DEFAULT_OUTPUT_FILE = 'valhalla-rules.yar'
 

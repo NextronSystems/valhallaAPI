@@ -64,7 +64,7 @@ PRODUCT_REQUIREMENTS = {
         "with_crypto": True,  # depends
     },
     "Tanium": {
-        "maximum_version": "3.7.0",
+        "maximum_version": "4.5.0",
         "supported_modules": [],
         "with_crypto": True,  # assumption
     },
@@ -81,7 +81,7 @@ PRODUCT_REQUIREMENTS = {
         "with_crypto": False,  # assumption
     },
     "osquery": {
-        "maximum_version": "3.7.1",
+        "maximum_version": "4.2.0",
         "supported_modules": ["pe", "elf", "math"],  # assumption
         "reference": "https://github.com/osql/osql/issues/11",
         "with_crypto": True,  # https://github.com/facebook/osquery/blob/experimental/tools/provision/formula/yara.rb

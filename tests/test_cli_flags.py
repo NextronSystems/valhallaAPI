@@ -7,7 +7,7 @@ import pytest
 
 import valhallaAPI.valhalla as valhalla_module
 import valhallaAPI.valhalla_cli as valhalla_cli
-from valhallaAPI.filters import ApiError
+from valhallaAPI.filters import ApiError, PRODUCT_REQUIREMENTS, get_product_requirements
 from valhallaAPI.valhalla import ValhallaAPI
 
 
@@ -179,3 +179,15 @@ def test_sigma_zip_raises_api_error(monkeypatch):
         v.get_sigma_rules_zip()
 
     assert exc.value.message == "user has no sigma rule feed access"
+
+
+def test_product_identifiers_match_filter_presets():
+    expected = [product for product in PRODUCT_REQUIREMENTS if product != "DummyTest"]
+
+    assert ValhallaAPI.PRODUCT_IDENTIFIER == expected
+    assert "DummyTest" not in ValhallaAPI.PRODUCT_IDENTIFIER
+
+
+def test_updated_product_versions():
+    assert get_product_requirements("Tanium")[0] == "4.5.0"
+    assert get_product_requirements("osquery")[0] == "4.2.0"

@@ -111,13 +111,13 @@ Get all subscribed rules for your scan engine, which supports YARA up to version
 response = v.get_rules_text(max_version="3.2.0", modules=['pe'])
 ```
 
-Get all subscribed rules for your `FireEyeEX`
+Get all subscribed rules for your `FireEye EX 9.0-9.11` appliance
 ```python
 
 from valhallaAPI.valhalla import ValhallaAPI
 
 v = ValhallaAPI(api_key="Your API Key")
-response = v.get_rules_text(product="FireEyeEX")
+response = v.get_rules_text(product="FireEyeEX_900_911")
 ```
 
 The following products have predefined presets
