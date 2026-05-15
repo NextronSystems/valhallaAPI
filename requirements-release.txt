@@ -1,0 +1,2 @@
+setuptools==82.0.1
+twine==6.2.0
