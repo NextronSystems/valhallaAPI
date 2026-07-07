@@ -235,7 +235,8 @@ def filter_search(rules, query):
     # Process the rules
     for rule in rules:
         if re.search(r'%s' % query, rule['description'], re.IGNORECASE) or \
-                re.search(r'%s' % query, rule['name'], re.IGNORECASE):
+                re.search(r'%s' % query, rule['name'], re.IGNORECASE) or \
+                re.search(r'%s' % query, rule.get('id', ''), re.IGNORECASE):
             filtered_rules.append(rule)
     return filtered_rules
 
