@@ -227,15 +227,17 @@ def filter_score(rules, minimum_score=0):
 def filter_search(rules, query):
     """
     Filter the rules object for rules that have a certain string in them
-    :param rules: YARA rules JSON object
-    :param query: string to search in rule name and description
+    :param rules: YARA or Sigma rules JSON object
+    :param query: literal string to search in rule name, description, and Sigma ID
     :return: list of filtered rules
     """
+    pattern = re.compile(re.escape(query), re.IGNORECASE)
     filtered_rules = []
     # Process the rules
     for rule in rules:
-        if re.search(r'%s' % query, rule['description'], re.IGNORECASE) or \
-                re.search(r'%s' % query, rule['name'], re.IGNORECASE):
+        if pattern.search(rule['description']) or \
+                pattern.search(rule['name']) or \
+                pattern.search(rule.get('id', '')):
             filtered_rules.append(rule)
     return filtered_rules
 
